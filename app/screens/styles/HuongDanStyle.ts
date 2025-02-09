@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
         height: 151,
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: 20
     },
     content: {
         width: 254,

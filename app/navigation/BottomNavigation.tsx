@@ -11,7 +11,6 @@ const Tab = createBottomTabNavigator();
 export default function BottomNavigation() { 
   return (
       <Tab.Navigator
-      initialRouteName="LiXiVang"
         screenOptions={{
           tabBarStyle: styles.tabBar,
           tabBarLabelStyle: styles.label,
@@ -26,7 +25,7 @@ export default function BottomNavigation() {
               <Image source={require("../../assets/images/phoneIcon.png")} style={styles.icon} />
             ),
             tabBarLabel: "Lắc Lộc Vàng",
-            tabBarActiveBackgroundColor: '#FFD233'
+            
           }}
         />
         <Tab.Screen
@@ -37,7 +36,7 @@ export default function BottomNavigation() {
               <Image source={require("../../assets/images/lixiIcon.png")} style={styles.icon} />
             ),
             tabBarLabel: "Lì Xì Vàng",
-             tabBarActiveBackgroundColor: '#FFD233'
+           
           }}
         />
         <Tab.Screen

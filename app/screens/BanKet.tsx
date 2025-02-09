@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { styles } from '../screens/styles/BanKetStyle';
-import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react'
+import { styles } from '../screens/styles/BanKetStyle'
+import { collection, getFirestore, onSnapshot } from 'firebase/firestore'
 import { app } from '../../firebase/firebaseConfig';
-import { Image, ImageBackground, Text, View } from 'react-native';
+import { Image, ImageBackground, Text, View } from 'react-native'
 import Header from '../components/Header'
-import { SafeAreaView } from 'react-native';
-import { ScrollView } from 'react-native';
-
-
+import { SafeAreaView } from 'react-native'
 interface Page_BanKet {
     contentChungKet: string
     contentGiaiBa: string

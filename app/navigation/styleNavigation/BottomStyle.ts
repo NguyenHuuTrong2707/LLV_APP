@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     fontWeight: '400',
 
   },
+  
   tabBar: {
     height: 70, 
     position: "absolute",
