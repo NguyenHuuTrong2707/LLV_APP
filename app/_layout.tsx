@@ -1,8 +1,10 @@
 import { Stack } from 'expo-router';
-import BottomNavigation from "./navigation/BottomNavigation";
+import { AuthProvider } from '@/contexts/AuthContext';
 export default function RootLayout() {
-  return <Stack screenOptions={{ headerShown: false }}>
-  <Stack.Screen name="index" />  
-  <Stack.Screen name="home" />   
-</Stack>
+  return <AuthProvider>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="home" />
+    </Stack>
+  </AuthProvider>
 }

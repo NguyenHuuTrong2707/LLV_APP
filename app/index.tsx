@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 import  Page_HuongDan  from './screens/HuongDan'
+import  LoginScreen from './Login'
 import { useFonts } from 'expo-font';
 import { ActivityIndicator} from "react-native";
 export default function Index() {
@@ -12,6 +13,6 @@ export default function Index() {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
   return (
-    <Page_HuongDan/>
+    <LoginScreen/>
   );
 }
