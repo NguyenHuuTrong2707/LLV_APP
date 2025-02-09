@@ -17,8 +17,9 @@ const db = getFirestore(app)
 const Page_HuongDan: React.FC = () => {
     const [page_huongDan, setPageHuongDan] = useState<Page_HuongDan | null>(null)
     const route = useRouter()
+  
     const goNext = () => {
-        route.push('/screens/BanKet')
+        route.push('/home')
     }
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_HuongDan"), (querySnapshot) => {

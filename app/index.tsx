@@ -1,6 +1,5 @@
 import { Text, View } from "react-native";
 import  Page_HuongDan  from './screens/HuongDan'
-import  Page_BanKet  from './screens/BanKet'
 import { useFonts } from 'expo-font';
 import { ActivityIndicator} from "react-native";
 export default function Index() {

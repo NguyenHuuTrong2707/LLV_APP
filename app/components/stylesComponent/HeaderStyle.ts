@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 25,
+    marginTop: 40,
   },
   backButton: {
     position: "absolute",
