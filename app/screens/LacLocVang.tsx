@@ -2,37 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Text, View, Alert, ImageBackground, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "./styles/LacLocVang";
-import { collection,doc, getFirestore, onSnapshot } from "firebase/firestore";
+import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import Header from "../components/Header";
 import ButtonComponent from "../components/ButtonCompont";
 import { handleShakeDetected, startListening, subscribeAccelerometer } from "./utils/shakeUtils";
 import { useAuth } from "@/contexts/AuthContext";
+import { updateDoc } from "firebase/firestore";
 interface Page_LacLocVang {
   imgBackGround: string;
 }
 
 const db = getFirestore(app);
 const Page_LacLocVang: React.FC = () => {
-  // Load firebase
   const [page_LacLocVang, setPage_LacLocVang] = useState<Page_LacLocVang | null>(null);
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [totalShakes, setTotalShakes] = useState<number>(0);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [isShaken, setIsShaken] = useState<boolean>(false);
+  const [isTotalShakesLoaded, setIsTotalShakesLoaded] = useState(false);
+
+  // theo dõi thay đổi của shake
   useEffect(() => {
-    if (!user) return; // Đảm bảo user đã đăng nhập trước khi lấy dữ liệu
-
-    const userRef = doc(db, "users", user.uid); // Đọc từ Firestore theo UID của user
-    const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const data = docSnapshot.data();
-        setTotalShakes(data.totalShakes || 0); // Cập nhật totalShakes từ Firestore
-      }
-    });
-
-    return () => unsubscribe();
-  }, [user]);
+    if (!user || totalShakes < 0 || !isTotalShakesLoaded) return;
+    const userRef = doc(db, "users", user.uid);
+    updateDoc(userRef, { totalShakes })
+      .then(() => console.log("totalShakes updated successfully"))
+      .catch((error) => console.error("Error updating totalShakes:", error));
+  }, [totalShakes, user, isTotalShakesLoaded]);
+  // load dữ liệu từ firebase
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, "Page_LacLocVang"),
@@ -62,7 +60,19 @@ const Page_LacLocVang: React.FC = () => {
       if (subscription) subscription.remove();
     };
   }, [isListening, isShaken]);
-
+    // đọc số lượt lắc của user
+  useEffect(() => {
+    if (!user) return;
+    const userRef = doc(db, "users", user.uid);
+    const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
+        setTotalShakes(data.totalShakes || 0);
+        setIsTotalShakesLoaded(true);
+      }
+    });
+    return () => unsubscribe();
+  }, [user]);
   return (
     <ImageBackground source={{ uri: page_LacLocVang?.imgBackGround }} style={styles.imgBackGround} resizeMode="cover">
       <SafeAreaView style={styles.container}>
