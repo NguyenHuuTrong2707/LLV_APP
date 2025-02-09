@@ -4,7 +4,8 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../firebase/firebaseConfig";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
-
+import { styles } from './screens/styles/LoginStyle'
+import PopupXinChao from "./components/PopupXinChao";
 const auth = getAuth(app);
 
 const LoginScreen = () => {
@@ -14,7 +15,7 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const router = useRouter();
-
+  const [showPopup, setShowPopup] = useState(false);
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert("Lỗi", "Vui lòng nhập đầy đủ email và mật khẩu!");
@@ -26,9 +27,11 @@ const LoginScreen = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       setUser(user);
-      Alert.alert("Thành công", "Đăng nhập thành công!");
-      router.replace("/screens/HuongDan");
-
+      // Mở popup
+      setTimeout(() => {
+        Keyboard.dismiss();
+        setShowPopup(true); 
+      }, 200);
     } catch (error: any) {
       Alert.alert("Lỗi", error.message);
     } finally {
@@ -45,18 +48,11 @@ const LoginScreen = () => {
         <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
           <Text style={styles.buttonText}>{loading ? "Đang đăng nhập..." : "Đăng nhập"}</Text>
         </TouchableOpacity>
+        {showPopup && <PopupXinChao />}
       </View>
     </TouchableWithoutFeedback>
 
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "#f8f9fa" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
-  input: { width: "100%", height: 50, borderWidth: 1, borderColor: "#ccc", borderRadius: 10, paddingHorizontal: 15, marginBottom: 15, backgroundColor: "#fff" },
-  button: { width: "100%", height: 50, backgroundColor: "#007bff", justifyContent: "center", alignItems: "center", borderRadius: 10 },
-  buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
-});
 
 export default LoginScreen;

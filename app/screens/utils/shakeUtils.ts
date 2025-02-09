@@ -10,6 +10,7 @@ export const handleShakeDetected = (
   if (totalShakes > 0) {
     setTotalShakes((prev) => prev - 1);
     setIsShaken(true); 
+    // Phần thưởng 
     Alert.alert("Lắc thành công!", "Bạn đã nhận được 1 chỉ vàng 9999", [
       { text: "OK", onPress: () => setIsListening(false) }
     ]);
