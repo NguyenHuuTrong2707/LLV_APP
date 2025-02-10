@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, } from "react-native";
 import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
@@ -11,7 +11,7 @@ interface Page_Popup {
 
 const db = getFirestore(app);
 
-const PopupXinChao: FC = () => {
+const PopupXinChao: React.FC = () => {
     const [page_Popup, setPage_Popup] = useState<Page_Popup | null>(null);
     const router = useRouter();
 

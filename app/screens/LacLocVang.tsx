@@ -9,6 +9,7 @@ import ButtonComponent from "../components/ButtonCompont";
 import { handleShakeDetected, startListening, subscribeAccelerometer } from "./utils/shakeUtils";
 import { useAuth } from "@/contexts/AuthContext";
 import { updateDoc } from "firebase/firestore";
+import PopUpNhanQua from "../components/PopupNhanQua";
 interface Page_LacLocVang {
   imgBackGround: string;
 }
@@ -21,6 +22,9 @@ const Page_LacLocVang: React.FC = () => {
   const [isListening, setIsListening] = useState<boolean>(false);
   const [isShaken, setIsShaken] = useState<boolean>(false);
   const [isTotalShakesLoaded, setIsTotalShakesLoaded] = useState(false);
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  const [shakeCount, setShakeCount] = useState<number>(1);
+  const [gift, setGift] = useState<{ name: string; image: string; code: string } | null>(null);
 
   // theo dõi thay đổi của shake
   useEffect(() => {
@@ -51,16 +55,16 @@ const Page_LacLocVang: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-
+  // thực hiện cảm biến lắc
   useEffect(() => {
     const subscription = subscribeAccelerometer(isListening, isShaken, () =>
-      handleShakeDetected(totalShakes, setTotalShakes, setIsShaken, setIsListening)
+      handleShakeDetected(totalShakes, setTotalShakes, setIsShaken, setIsListening, setPopupVisible, setGift)
     );
     return () => {
       if (subscription) subscription.remove();
     };
   }, [isListening, isShaken]);
-    // đọc số lượt lắc của user
+  // đọc số lượt lắc của user
   useEffect(() => {
     if (!user) return;
     const userRef = doc(db, "users", user.uid);
@@ -84,24 +88,32 @@ const Page_LacLocVang: React.FC = () => {
             </Text>
 
             {totalShakes > 0 ? (
-              <ButtonComponent
-                onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken)}
-                title="Lắc ngay 1 lượt"
-              />
-            ) : (
-              <Text style={styles.noShakes}>Bạn đã hết lượt lắc!</Text>
-            )}
+              <>
+                <ButtonComponent
+                  onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 1)}
+                  title="Lắc ngay 1 lượt"
+                />
 
-            {totalShakes > 0 ? (
-              <ButtonComponent
-                onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken)}
-                title="Lắc ngay 10 lượt"
-              />
+                {totalShakes >= 10 && (
+                  <ButtonComponent
+                    onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 10)}
+                    title="Lắc ngay 10 lượt"
+                  />
+                )}
+              </>
             ) : (
-              <Text style={styles.noShakes}>Bạn đã hết lượt lắc!</Text>
+              <Text style={styles.noShakes}>Bạn đã hết lượt lắc!</Text> 
             )}
           </View>
         </ScrollView>
+        {isPopupVisible && <PopUpNhanQua
+          title1={gift?.name ?? ''}
+          title2="1 mã số may mắn"
+          imgQua1={gift?.image ?? ''}
+          giftcode={gift?.code ?? ''}
+          content="WOW, THÁNH LẮC VÀNG ĐÂY RỒI,GIÀU TO RỒI ANH EM ƠI!"
+          onClose={() => setPopupVisible(false)}
+        />}
       </SafeAreaView>
     </ImageBackground>
   );

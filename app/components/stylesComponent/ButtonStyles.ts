@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
     button: {
         width: 179,
         height: 44,
-        borderRadius: 20,
+        borderRadius: 15,
         borderColor: '#fbc402',
         borderWidth: 2,
         overflow: 'hidden',
@@ -19,6 +19,6 @@ export const styles = StyleSheet.create({
         flex :1,
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 25,
+        borderRadius: 12,
       },
 });
