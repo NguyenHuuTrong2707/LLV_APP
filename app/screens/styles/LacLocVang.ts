@@ -9,8 +9,8 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     contentContainer: {
-        justifyContent: 'flex-end',
-        flex: 1
+        position: 'absolute',
+        bottom: 100,
     },
     title: {
         fontSize: 24,
@@ -46,4 +46,5 @@ export const styles = StyleSheet.create({
         color: "red",
         marginTop: 10,
     },
+   
 });

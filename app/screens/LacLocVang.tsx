@@ -7,6 +7,7 @@ import { app } from "../../firebase/firebaseConfig";
 import Header from "../components/Header";
 import ButtonComponent from "../components/ButtonCompont";
 import { handleShakeDetected, startListening, subscribeAccelerometer } from "./utils/shakeUtils";
+import { addGiftToKhoLoc } from "./utils/addGift";
 import { useAuth } from "@/contexts/AuthContext";
 import { updateDoc } from "firebase/firestore";
 import PopUpNhanQua from "../components/PopupNhanQua";
@@ -81,7 +82,7 @@ const Page_LacLocVang: React.FC = () => {
     <ImageBackground source={{ uri: page_LacLocVang?.imgBackGround }} style={styles.imgBackGround} resizeMode="cover">
       <SafeAreaView style={styles.container}>
         <Header />
-        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 50 }}>
+       
           <View style={styles.contentContainer}>
             <Text style={styles.count}>
               Bạn có <Text style={styles.totalShakes}>{totalShakes}</Text> lượt lắc
@@ -105,14 +106,19 @@ const Page_LacLocVang: React.FC = () => {
               <Text style={styles.noShakes}>Bạn đã hết lượt lắc!</Text> 
             )}
           </View>
-        </ScrollView>
+       
         {isPopupVisible && <PopUpNhanQua
           title1={gift?.name ?? ''}
           title2="1 mã số may mắn"
           imgQua1={gift?.image ?? ''}
           giftcode={gift?.code ?? ''}
           content="WOW, THÁNH LẮC VÀNG ĐÂY RỒI,GIÀU TO RỒI ANH EM ƠI!"
-          onClose={() => setPopupVisible(false)}
+          onClose={async () => {
+            if (gift && user?.uid) {
+              await addGiftToKhoLoc(user.uid, gift); 
+            }
+            setPopupVisible(false);
+          }}
         />}
       </SafeAreaView>
     </ImageBackground>
