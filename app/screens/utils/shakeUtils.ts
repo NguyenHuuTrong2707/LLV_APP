@@ -55,7 +55,7 @@ export const handleShakeDetected = async (
   setIsShaken: React.Dispatch<React.SetStateAction<boolean>>,
   setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
   setPopupVisible: React.Dispatch<React.SetStateAction<boolean>>,
-  setGift: React.Dispatch<React.SetStateAction<{ id : string, name: string; image: string; code: string } | null>>,
+  setGift: React.Dispatch<React.SetStateAction<{ id : string, name: string; image: string; code: string,  } | null>>,
   
 ) => {
   if (totalShakes > 0) {

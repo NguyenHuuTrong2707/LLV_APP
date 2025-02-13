@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, Text, View,TouchableOpacity } from 'react-native';
+import { FlatList, ImageBackground, Text, View, TouchableOpacity } from 'react-native';
 import { styles } from './styles/KhoLocStyle'
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
@@ -14,11 +14,13 @@ interface Page_KhoLoc {
     logo: string
 }
 interface Gift {
-    id_qua: string,
-    kho_loc_id: string;
-    name: string;
-    imgQua: string;
+    id_qua: string
+    kho_loc_id: string
+    name: string
+    imgQua: string
     quantity: number
+    type?: string
+    giftcode: string
 }
 const db = getFirestore(app);
 const Page_KhoLoc: React.FC = () => {
@@ -26,7 +28,8 @@ const Page_KhoLoc: React.FC = () => {
     const [page_KhoLoc, setPage_KhoLoc] = useState<Page_KhoLoc | null>(null);
     const { user } = useAuth();
     const [userGifts, setUserGifts] = useState<Gift[]>([])
-    const [selectedTab, setSelectedTab] = useState< string | null>(null)
+    const [selectedTab, setSelectedTab] = useState<string | null>('Lắc lộc vàng')
+
     useEffect(() => {
         const unsubscribe = onSnapshot(
             collection(db, "KhoLoc"),
@@ -56,14 +59,21 @@ const Page_KhoLoc: React.FC = () => {
     useEffect(() => {
         if (!user) return;
         const userRef = doc(db, "users", user.uid);
+
         const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
                 const rawGifts: Gift[] = data.khoLoc || [];
-                // Nhóm các phần quà thành nhóm
+
+                // Nhóm phần quà
                 const groupedGifts: { [key: string]: Gift & { quantity: number } } = {};
+                const giftCodes: Gift[] = [];
 
                 rawGifts.forEach((gift) => {
+                    if (gift.giftcode) {
+                        giftCodes.push(gift);
+                    }
+
                     if (groupedGifts[gift.id_qua]) {
                         groupedGifts[gift.id_qua].quantity += 1;
                     } else {
@@ -71,12 +81,20 @@ const Page_KhoLoc: React.FC = () => {
                     }
                 });
 
-                setUserGifts(Object.values(groupedGifts));
+                // Cập nhật state
+                setUserGifts(selectedTab === 'Mã số may mắn' ? giftCodes : Object.values(groupedGifts));
             }
         });
 
         return () => unsubscribe();
-    }, [user]);
+    }, [user, selectedTab]);
+    // lọc dữ liệu theo danh mục
+    const filteredData = userGifts.filter((gift) => {
+        if (selectedTab === 'Lắc lộc vàng') return true; // Hiển thị tất cả
+        if (selectedTab === 'Lì xì vàng') return gift.type === 'Lì xì vàng';
+        if (selectedTab === 'Mã số may mắn') return !!gift.giftcode;
+        return true;
+    });
     return (
         <ImageBackground
             source={{ uri: page_KhoLoc?.imgBackGround }}
@@ -95,27 +113,15 @@ const Page_KhoLoc: React.FC = () => {
                 </View>
                 {/* Phân loại phần thưởng */}
                 <View style={styles.phanloaiContainer}>
-                    {/* Lắc lộc vàng */}
-                    <TouchableOpacity
-                        style={[styles.navContainer,selectedTab === 'Lắc lộc vàng' && { backgroundColor: 'red', }]}
-                        onPress={() => setSelectedTab('Lắc lộc vàng')}
-                    >
-                        <Text style={[styles.txtLLV,selectedTab === 'Lắc lộc vàng' && { color: '#FFF', }]}>Lắc lộc vàng</Text>
-                    </TouchableOpacity>
-                    {/* Lì xì vàng */}
-                    <TouchableOpacity
-                        style={[styles.navContainer,selectedTab === 'Lì xì vàng' && { backgroundColor: 'red' }]}
-                        onPress={() => setSelectedTab('Lì xì vàng')}
-                    >
-                        <Text style={[styles.txtLLV,selectedTab === 'Lì xì vàng' && { color: '#FFF', }]}>Lì xì vàng</Text>
-                    </TouchableOpacity>
-                    {/* Mã số may mắn */}
-                    <TouchableOpacity
-                        style={[styles.navContainer,selectedTab === 'Mã số may mắn' && { backgroundColor: 'red' }]}
-                        onPress={() => setSelectedTab('Mã số may mắn')}
-                    >
-                        <Text style={[styles.txtLLV,selectedTab === 'Mã số may mắn' && { color: '#FFF', }]}>Mã số may mắn</Text>
-                    </TouchableOpacity>
+                    {['Lắc lộc vàng', 'Lì xì vàng', 'Mã số may mắn'].map((tab) => (
+                        <TouchableOpacity
+                            key={tab}
+                            style={[styles.navContainer, selectedTab === tab && { backgroundColor: 'red' }]}
+                            onPress={() => setSelectedTab(tab)}
+                        >
+                            <Text style={[styles.txtLLV, selectedTab === tab && { color: '#FFF' }]}>{tab}</Text>
+                        </TouchableOpacity>
+                    ))}
                 </View>
                 {/* Frame */}
                 <ImageBackground
@@ -124,7 +130,7 @@ const Page_KhoLoc: React.FC = () => {
                     style={styles.frame}
                 >
                     <FlatList
-                        data={userGifts}
+                        data={filteredData}
                         keyExtractor={(item) => item.kho_loc_id}
                         numColumns={3}
                         nestedScrollEnabled={true}
@@ -136,29 +142,45 @@ const Page_KhoLoc: React.FC = () => {
                         columnWrapperStyle={{ gap: 10 }}
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item }) => (
-                            <View style={styles.giftContainer}>
-                                <ImageBackground
-                                    source={require('../../assets/images/quabg.png')}
-                                    style={styles.quabg}
-                                >
-                                    <Image source={{ uri: item.imgQua }} style={styles.giftImage} />
-                                    <View style={styles.giftInfo}>
-                                        <Text style={styles.giftName}>{item.name}</Text>
-                                    </View>
-                                    {/* Số lượng */}
-                                    <View style={styles.countContainer} >
-                                        <Text style={styles.count}>
-                                            Số lượng: {item.quantity}
-                                        </Text>
-                                    </View>
-                                    {/* Trạng thái */}
-                                    <View style={styles.countContainer} >
+                            selectedTab === 'Mã số may mắn' ? (
+                                <View style={styles.giftContainer}>
+                                    <ImageBackground
+                                        source={require('../../assets/images/quabg.png')}
+                                        style={styles.imgGiftContainer}
+                                    >
+                                        <ImageBackground source={require('../../assets/images/ticker.png')} style={styles.imgGiftCode}>
+                                            <Text style={styles.giftcode}>{item.giftcode}</Text>
+                                        </ImageBackground>
                                         <Text style={styles.count}>
                                             Trạng thái:
                                         </Text>
-                                    </View>
-                                </ImageBackground>
-                            </View>
+                                    </ImageBackground>
+                                </View>
+                            ) : (
+                                <View style={styles.giftContainer}>
+                                    <ImageBackground
+                                        source={require('../../assets/images/quabg.png')}
+                                        style={styles.quabg}
+                                    >
+                                        <Image source={{ uri: item.imgQua }} style={styles.giftImage} />
+                                        <View style={styles.giftInfo}>
+                                            <Text style={styles.giftName}>{item.name}</Text>
+                                        </View>
+                                        {/* Số lượng */}
+                                        <View style={styles.countContainer} >
+                                            <Text style={styles.count}>
+                                                Số lượng: {item.quantity}
+                                            </Text>
+                                        </View>
+                                        {/* Trạng thái */}
+                                        <View style={styles.countContainer} >
+                                            <Text style={styles.count}>
+                                                Trạng thái:
+                                            </Text>
+                                        </View>
+                                    </ImageBackground>
+                                </View>
+                            )
                         )}
                     />
                 </ImageBackground>

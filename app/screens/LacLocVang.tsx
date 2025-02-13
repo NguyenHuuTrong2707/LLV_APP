@@ -92,13 +92,13 @@ const Page_LacLocVang: React.FC = () => {
               <>
                 <ButtonComponent
                   onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 1)}
-                  title="Lắc ngay 1 lượt"
+                  title="Lắc 1 lượt"
                 />
 
                 {totalShakes >= 10 && (
                   <ButtonComponent
                     onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 10)}
-                    title="Lắc ngay 10 lượt"
+                    title="Lắc 10 lượt"
                   />
                 )}
               </>

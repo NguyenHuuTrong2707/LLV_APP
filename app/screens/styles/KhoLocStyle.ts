@@ -33,6 +33,8 @@ export const styles = StyleSheet.create({
         height: 155,
         alignItems: 'center',
         padding: 5,
+        
+        
     },
     giftContainer: {
         marginBottom: 15,
@@ -53,7 +55,7 @@ export const styles = StyleSheet.create({
         lineHeight: 13,
     },
     countContainer: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     count: {
         color: '#732F2F',
@@ -84,5 +86,26 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#c2030a',
         
+    },
+    giftcode: {
+        textAlign: 'center',
+        fontSize: 10,
+        width: 47,
+        fontWeight: 'bold',
+    },
+    imgGiftCode: {
+        width: 74,
+        height: 43,
+        flex :1,
+        alignItems: 'center',
+        padding: 9,
+        position :'relative',
+        top: 10,
+    },
+    imgGiftContainer : {
+        width : 96,
+        height: 155,
+        alignItems: 'center',
+        padding: 10,
     }
 });
