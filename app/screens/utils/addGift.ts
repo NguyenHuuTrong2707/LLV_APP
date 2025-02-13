@@ -2,7 +2,7 @@ import { doc, updateDoc,getFirestore, arrayUnion, increment } from "firebase/fir
 import uuid from "react-native-uuid";
 import { app } from "@/firebase/firebaseConfig";
 const db = getFirestore(app)
-const addGiftToKhoLoc = async (userId: string, gift: { name: string; image: string; code: string }) => {
+const addGiftToKhoLoc = async (userId: string, gift: {id : string, name: string; image: string; code: string }) => {
     try {
         if (!userId) {
             console.error("Không tìm thấy userId!");
@@ -26,6 +26,7 @@ const addGiftToKhoLoc = async (userId: string, gift: { name: string; image: stri
         await updateDoc(userRef, {
             khoLoc: arrayUnion({
                 kho_loc_id,
+                id_qua : gift.id,
                 giftcode: gift.code,
                 name: gift.name,
                 imgQua: gift.image,

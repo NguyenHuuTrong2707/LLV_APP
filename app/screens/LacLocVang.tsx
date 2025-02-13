@@ -25,7 +25,7 @@ const Page_LacLocVang: React.FC = () => {
   const [isTotalShakesLoaded, setIsTotalShakesLoaded] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [shakeCount, setShakeCount] = useState<number>(1);
-  const [gift, setGift] = useState<{ name: string; image: string; code: string } | null>(null);
+  const [gift, setGift] = useState<{id : string, name: string; image: string; code: string } | null>(null);
 
   // theo dõi thay đổi của shake
   useEffect(() => {

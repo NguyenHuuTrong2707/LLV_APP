@@ -4,6 +4,7 @@ import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "@/firebase/firebaseConfig";
 
 interface Gift {
+  id: string
   name: string;
   image: string;
   xacxuat: number;
@@ -15,6 +16,7 @@ const db = getFirestore(app);
 const getGiftsFromFirestore = (callback: (gifts: Gift[]) => void) => {
   return onSnapshot(collection(db, "PhanThuong"), (snapshot) => {
     const gifts: Gift[] = snapshot.docs.map((doc) => ({
+      id : doc.id,
       name: doc.data().name,
       image: doc.data().image,
       xacxuat: doc.data().xacxuat,
@@ -53,7 +55,7 @@ export const handleShakeDetected = async (
   setIsShaken: React.Dispatch<React.SetStateAction<boolean>>,
   setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
   setPopupVisible: React.Dispatch<React.SetStateAction<boolean>>,
-  setGift: React.Dispatch<React.SetStateAction<{ name: string; image: string; code: string } | null>>,
+  setGift: React.Dispatch<React.SetStateAction<{ id : string, name: string; image: string; code: string } | null>>,
   
 ) => {
   if (totalShakes > 0) {
@@ -65,7 +67,7 @@ export const handleShakeDetected = async (
       const gift = getRandomGift(gifts);
       if (gift) {
         const code = generateGiftCode();
-        setGift({ name: gift.name, image: gift.image, code });
+        setGift({id : gift.id, name: gift.name, image: gift.image, code });
         setPopupVisible(true);
       }
     });
