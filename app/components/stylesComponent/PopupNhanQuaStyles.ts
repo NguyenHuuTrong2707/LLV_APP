@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     },
     giftcode: {
         textAlign: 'center',
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: 'bold',
     },
     content: {

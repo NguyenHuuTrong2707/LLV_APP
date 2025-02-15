@@ -11,6 +11,7 @@ import { addGiftToKhoLoc } from "./utils/addGift";
 import { useAuth } from "@/contexts/AuthContext";
 import { updateDoc } from "firebase/firestore";
 import PopUpNhanQua from "../components/PopupNhanQua";
+import Popup10Qua from '../components/Popup10Qua'
 interface Page_LacLocVang {
   imgBackGround: string;
 }
@@ -24,8 +25,10 @@ const Page_LacLocVang: React.FC = () => {
   const [isShaken, setIsShaken] = useState<boolean>(false);
   const [isTotalShakesLoaded, setIsTotalShakesLoaded] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isPopupMultiVisible, setPopupMultiVisible] = useState(false);
   const [shakeCount, setShakeCount] = useState<number>(1);
-  const [gift, setGift] = useState<{id : string, name: string; image: string; code: string } | null>(null);
+  const [gift, setGift] = useState<{ id: string, name: string; image: string; code: string } | null>(null);
+  const [gifts, setGifts] = useState<{ id: string; name: string; image: string; code: string }[]>([]);
 
   // theo dõi thay đổi của shake
   useEffect(() => {
@@ -58,13 +61,29 @@ const Page_LacLocVang: React.FC = () => {
 
   // thực hiện cảm biến lắc
   useEffect(() => {
-    const subscription = subscribeAccelerometer(isListening, isShaken, () =>
-      handleShakeDetected(totalShakes, setTotalShakes, setIsShaken, setIsListening, setPopupVisible, setGift)
+    const subscription = subscribeAccelerometer(
+      isListening,
+      isShaken,
+      (shakeCount) =>
+        handleShakeDetected(
+          totalShakes,
+          setTotalShakes,
+          setIsShaken,
+          setIsListening,
+          setPopupVisible,
+          setPopupMultiVisible,
+          setGift,
+          setGifts,
+          shakeCount
+        ),
+      shakeCount // Truyền số lượt lắc
     );
+
     return () => {
       if (subscription) subscription.remove();
     };
-  }, [isListening, isShaken]);
+  }, [isListening, isShaken, shakeCount]);
+
   // đọc số lượt lắc của user
   useEffect(() => {
     if (!user) return;
@@ -82,44 +101,56 @@ const Page_LacLocVang: React.FC = () => {
     <ImageBackground source={{ uri: page_LacLocVang?.imgBackGround }} style={styles.imgBackGround} resizeMode="cover">
       <SafeAreaView style={styles.container}>
         <Header />
-       
-          <View style={styles.contentContainer}>
-            <Text style={styles.count}>
-              Bạn có <Text style={styles.totalShakes}>{totalShakes}</Text> lượt lắc
-            </Text>
 
-            {totalShakes > 0 ? (
-              <>
+        <View style={styles.contentContainer}>
+          <Text style={styles.count}>
+            Bạn có <Text style={styles.totalShakes}>{totalShakes}</Text> lượt lắc
+          </Text>
+
+          {totalShakes > 0 ? (
+            <>
+              <ButtonComponent
+                onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 1)}
+                title="Lắc 1 lượt"
+              />
+
+              {totalShakes >= 10 && (
                 <ButtonComponent
-                  onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 1)}
-                  title="Lắc 1 lượt"
-                />
+                  onPress={() => {
+                    startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 10);
 
-                {totalShakes >= 10 && (
-                  <ButtonComponent
-                    onPress={() => startListening(totalShakes, isShaken, setIsListening, setIsShaken, setShakeCount, 10)}
-                    title="Lắc 10 lượt"
-                  />
-                )}
-              </>
-            ) : (
-              <Text style={styles.noShakes}>Bạn đã hết lượt lắc!</Text> 
-            )}
-          </View>
-       
+                  }}
+                  title="Lắc 10 lượt"
+                />
+              )}
+            </>
+          ) : (
+            <Text style={styles.noShakes}>Bạn đã hết lượt lắc!</Text>
+          )}
+        </View>
+
         {isPopupVisible && <PopUpNhanQua
           title1={gift?.name ?? ''}
-          title2="1 mã số may mắn"
           imgQua1={gift?.image ?? ''}
           giftcode={gift?.code ?? ''}
           content="WOW, THÁNH LẮC VÀNG ĐÂY RỒI,GIÀU TO RỒI ANH EM ƠI!"
           onClose={async () => {
             if (gift && user?.uid) {
-              await addGiftToKhoLoc(user.uid, gift); 
+              await addGiftToKhoLoc(user.uid, gift);
             }
             setPopupVisible(false);
           }}
         />}
+        {isPopupMultiVisible && (
+          <Popup10Qua
+            gifts={gifts.map((gift) => ({
+              name: gift.name,
+              imgUrl: gift.image,
+              giftcode: gift.code,
+            }))}
+            onClose={() => setPopupVisible(false)}
+          />
+        )}
       </SafeAreaView>
     </ImageBackground>
   );

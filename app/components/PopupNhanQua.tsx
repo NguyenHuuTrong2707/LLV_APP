@@ -12,14 +12,13 @@ interface Page_PopUpNhanQua {
 }
 interface PopUpNhanQua_Props {
     title1: string,
-    title2: string,
     imgQua1: string,
     giftcode: string,
     content: string,
     onClose : () => void,
 }
 const db = getFirestore(app)
-const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, title2, imgQua1, giftcode, content , onClose}) => {
+const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, imgQua1, giftcode, content , onClose}) => {
     const [page_PopupNhanQua, setPage_PopupNhanQua] = useState<Page_PopUpNhanQua | null>(null);
     const router = useRouter();
     useEffect(() => {
@@ -51,7 +50,7 @@ const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, title2, imgQua1, g
                 <ImageBackground source={{ uri: page_PopupNhanQua?.imgBackGround }} style={styles.img} >
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>{title1}</Text>
-                        <Text style={styles.title}>{title2}</Text>
+                        <Text style={styles.title}>1 mã số may mắn</Text>
                         <View style={styles.imgQuaContainer}>
                             <Image source={{ uri: imgQua1 }} style={styles.imgQua}></Image>
                             <ImageBackground source={ require ('../../assets/images/ticker.png')} style={styles.imgGiftCode}>

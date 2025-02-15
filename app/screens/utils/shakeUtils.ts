@@ -55,27 +55,43 @@ export const handleShakeDetected = async (
   setIsShaken: React.Dispatch<React.SetStateAction<boolean>>,
   setIsListening: React.Dispatch<React.SetStateAction<boolean>>,
   setPopupVisible: React.Dispatch<React.SetStateAction<boolean>>,
-  setGift: React.Dispatch<React.SetStateAction<{ id : string, name: string; image: string; code: string,  } | null>>,
-  
+  setPopupMultiVisible: React.Dispatch<React.SetStateAction<boolean>>,
+  setGift: React.Dispatch<React.SetStateAction<{ id: string; name: string; image: string; code: string } | null>>,
+  setGifts: React.Dispatch<React.SetStateAction<{ id: string; name: string; image: string; code: string }[]>>, // Thêm state danh sách quà
+  shakeCount: number
 ) => {
-  if (totalShakes > 0) {
-    setTotalShakes((prev) => prev - 1);
+  if (totalShakes >= shakeCount) {
+    setTotalShakes((prev) => prev - shakeCount);
     setIsShaken(true);
-    setPopupVisible(true);
 
     getGiftsFromFirestore((gifts) => {
-      const gift = getRandomGift(gifts);
-      if (gift) {
-        const code = generateGiftCode();
-        setGift({id : gift.id, name: gift.name, image: gift.image, code });
-        setPopupVisible(true);
+      let receivedGifts = [];
+
+      for (let i = 0; i < shakeCount; i++) {
+        const gift = getRandomGift(gifts);
+        if (gift) {
+          const code = generateGiftCode();
+          receivedGifts.push({ id: gift.id, name: gift.name, image: gift.image, code });
+        }
+      }
+
+      if (receivedGifts.length > 0) {
+        if (shakeCount === 10) {
+          setGifts(receivedGifts); // Lưu danh sách quà khi lắc 10 lần
+          setPopupMultiVisible(true);
+        } else {
+          setGift(receivedGifts[0]); // Hiển thị 1 quà
+          setPopupVisible(true);
+        }
       }
     });
   } else {
-    Alert.alert("Hết lượt!", "Bạn không còn lượt lắc nào.");
+    Alert.alert("Hết lượt!", "Bạn không còn đủ lượt lắc.");
     setIsListening(false);
   }
 };
+
+
 
 // Bắt đầu lắng nghe cảm biến gia tốc
 export const startListening = (
@@ -102,17 +118,26 @@ export const startListening = (
 export const subscribeAccelerometer = (
   isListening: boolean,
   isShaken: boolean,
-  handleShakeDetected: () => void
+  handleShakeDetected: (shakeCount: number) => void, 
+  shakeCount: number
 ) => {
+  let detectedShakes = 0; 
   let subscription: any;
+
   if (isListening) {
     subscription = Accelerometer.addListener(({ x, y, z }) => {
       const acceleration = Math.sqrt(x * x + y * y + z * z);
       if (acceleration > 2.5 && !isShaken) {
-        handleShakeDetected();
+        detectedShakes++;
+        if (detectedShakes >= shakeCount) {
+          handleShakeDetected(shakeCount);
+          detectedShakes = 0; 
+        }
       }
     });
     Accelerometer.setUpdateInterval(100);
   }
+
   return subscription;
 };
+
