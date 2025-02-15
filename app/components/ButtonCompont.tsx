@@ -6,18 +6,20 @@ interface ButtonProps {
     title?: string;
     onPress : () => void;
     buttonStyle?: StyleProp<ViewStyle>;
+    disabled? : boolean
 }
 
-const ButtonComponent: React.FC<ButtonProps> = ({ title ,buttonStyle, onPress}) => {
+const ButtonComponent: React.FC<ButtonProps> = ({ title ,buttonStyle,disabled = false, onPress}) => {
     return (
-        <TouchableOpacity style={[styles.button, buttonStyle]}
-         onPress={onPress}
+        <TouchableOpacity style={[styles.button, buttonStyle, disabled && styles.disabledButton]}
+         disabled = {disabled}
+         onPress={!disabled ? onPress : undefined}
         >
             <LinearGradient
-                colors={['#fcdd10', '#f58803']}
+                colors={disabled ? ['#BEBEBE', '#8A8A8A'] : ['#fcdd10', '#f58803']}
                 style={styles.gradient}>
 
-                <Text style={styles.content}>
+                <Text style={[styles.content, disabled && styles.disabledText]}>
                     {title}
                 </Text>
 

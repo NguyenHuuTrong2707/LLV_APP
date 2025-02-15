@@ -135,7 +135,7 @@ const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
                 </ImageBackground>
             </View>
             <ButtonComponent title="Chia sẻ" onPress={() => { }} />
-            <ButtonComponent title="Đã nhận" onPress={onClose} />
+            <ButtonComponent title="Đã nhận" onPress={onClose} disabled={currentIndex !== gifts.length - 1}   />
         </View>
     );
 };
