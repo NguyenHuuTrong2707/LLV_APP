@@ -74,8 +74,7 @@ const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>{page_Popup10Qua?.title10qua}</Text>
                         <Text style={styles.titleContent}>{gifts[currentIndex]?.name || ""}</Text>
-                        <Text style={styles.titleContent}>1 mã số may mắn</Text>
-
+                        <Text style={styles.titleContent}>1 Mã số may mắn</Text>
                         {/* Hiển thị quà hiện tại */}
                         <View style={styles.imgQuaContainer}>
                             <Image source={{ uri: gifts[currentIndex].imgUrl }} style={styles.imgQua} />
@@ -85,7 +84,6 @@ const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
                         </View>
                         {/* Nút chuyển quà */}
                         <View style={styles.paginationContainer}>
-                            {/* Nút Previous */}
                             <TouchableOpacity
                                 style={styles.buttonContainer}
                                 onPress={handlePreviousGift}

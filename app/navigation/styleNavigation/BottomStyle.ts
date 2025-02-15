@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#C2030B',
     fontWeight: '400',
-
+   fontFamily : 'SVN-Cookies'
   },
   
   tabBar: {

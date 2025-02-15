@@ -21,14 +21,14 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         color: "#333333",
         textAlign: 'center',
-        fontWeight : 700,
+        fontWeight: 700,
         marginBottom: 5,
     },
-    totalShakes :{
-     fontSize: 24,
-     lineHeight: 24,
-     color: '#c2030b',
-     fontWeight : 700,
+    totalShakes: {
+        fontSize: 24,
+        lineHeight: 24,
+        color: '#c2030b',
+        fontWeight: 700,
     },
     button: {
         backgroundColor: "#000",
@@ -46,5 +46,5 @@ export const styles = StyleSheet.create({
         color: "red",
         marginTop: 10,
     },
-   
+
 });

@@ -43,11 +43,10 @@ export const styles = StyleSheet.create({
     titleContent: {
         color: '#FFF',
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
-        lineHeight: 20,
+        lineHeight: 18,
         marginBottom: 5,
-
     },
     imgQuaContainer: {
         flexDirection: 'row',
@@ -62,7 +61,8 @@ export const styles = StyleSheet.create({
     imgGiftCode: {
         width: 97,
         height: 52,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        
     },
     giftcode: {
         textAlign: 'center',

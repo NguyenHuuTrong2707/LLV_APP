@@ -13,6 +13,13 @@ export const styles = StyleSheet.create({
         height: 600,
         marginTop: 20,
         flex: 1,
+        alignItems: 'center'
+    },
+    title: {
+     fontFamily: 'SVN-Cookies',
+     marginTop  : 10,
+     textAlign: 'center',
+     color: '#FAD93C'
     },
     imgGiaiNhi: {
         position: 'absolute',
@@ -115,9 +122,10 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         width: 84,
         color: '#FFE933',
-        fontSize: 15,
+        fontSize: 14,
         lineHeight: 18,
         fontWeight: '400',
+        fontFamily : 'SVN-Cookies'
     },
     vong2Container: {
         position: 'absolute',

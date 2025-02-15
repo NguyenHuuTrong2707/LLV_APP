@@ -31,7 +31,6 @@ const Page_BanKet: React.FC = () => {
                 console.log("No documents found in 'Page_BanKet' collection.");
                 return;
             }
-
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 setPage_BanKet({
@@ -76,6 +75,8 @@ const Page_BanKet: React.FC = () => {
                     style={styles.bannerContainer}
                     resizeMode='cover'
                 >
+                    {/* Title */}
+                    <Text style = {styles.title}>GIÁ TRỊ GIẢI THƯỞNG KỲ CHUNG KẾT</Text>
                     {/* Giai nhi */}
                     <Text style={styles.titleGiaiNhi}>
                         01 Giải Nhì

@@ -5,7 +5,7 @@ import { useFonts } from 'expo-font';
 import { ActivityIndicator} from "react-native";
 export default function Index() {
   const [fontsLoaded] = useFonts({
-    'SVN-Cookie': require('../assets/fonts/SVN-Cookie.ttf'),
+    'SVN-Cookies': require('../assets/fonts/SVN-Cookies.ttf'),
   });
 
 

@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
   titleText: {
     fontSize: 24,
     color: "#C2030B",
-    fontFamily: 'SVN-Cookie',
+    fontFamily: 'SVN-Cookies',
     
   },
   titleImage: {

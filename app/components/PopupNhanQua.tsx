@@ -50,7 +50,7 @@ const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, imgQua1, giftcode,
                 <ImageBackground source={{ uri: page_PopupNhanQua?.imgBackGround }} style={styles.img} >
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>{title1}</Text>
-                        <Text style={styles.title}>1 mã số may mắn</Text>
+                        <Text style={styles.title}>1 Mã số may mắn</Text>
                         <View style={styles.imgQuaContainer}>
                             <Image source={{ uri: imgQua1 }} style={styles.imgQua}></Image>
                             <ImageBackground source={ require ('../../assets/images/ticker.png')} style={styles.imgGiftCode}>

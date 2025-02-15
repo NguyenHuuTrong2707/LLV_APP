@@ -148,7 +148,12 @@ const Page_LacLocVang: React.FC = () => {
               imgUrl: gift.image,
               giftcode: gift.code,
             }))}
-            onClose={() => setPopupVisible(false)}
+            onClose={async () => {
+              if (gifts.length > 0 && user?.uid) {
+                await Promise.all(gifts.map((gift) => addGiftToKhoLoc(user.uid, gift)));
+              }
+              setPopupMultiVisible(false);
+            }}
           />
         )}
       </SafeAreaView>

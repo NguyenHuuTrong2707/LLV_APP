@@ -12,9 +12,9 @@ export const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         marginTop: 40,
-        color: '#FAD93C',
+        color: '#FFF9D1',
         lineHeight: 33,
-        fontFamily: 'SVN-Cookie'
+        fontFamily: 'SVN-Cookies'
     },
     logoContainer: {
         paddingVertical: 10
@@ -33,8 +33,6 @@ export const styles = StyleSheet.create({
         height: 155,
         alignItems: 'center',
         padding: 5,
-        
-        
     },
     giftContainer: {
         marginBottom: 15,
@@ -85,7 +83,8 @@ export const styles = StyleSheet.create({
     txtLLV: {
         textAlign: 'center',
         color: '#c2030a',
-        
+        fontFamily: 'SVN-Cookies',
+        fontSize : 12
     },
     giftcode: {
         textAlign: 'center',
