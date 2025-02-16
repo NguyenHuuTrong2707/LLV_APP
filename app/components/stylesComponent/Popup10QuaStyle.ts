@@ -36,17 +36,19 @@ export const styles = StyleSheet.create({
         color: '#FFE933',
         textAlign: 'center',
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: 400,
         lineHeight: 20,
-        marginBottom: 5
+        marginBottom: 5,
+        fontFamily: 'SVN-Cookies'
     },
     titleContent: {
         color: '#FFF',
         textAlign: 'center',
         fontSize: 14,
-        fontWeight: 'bold',
+        fontWeight: '700',
         lineHeight: 18,
-        marginBottom: 5,
+        fontFamily: 'SVN-Gotham'
+        
     },
     imgQuaContainer: {
         flexDirection: 'row',
@@ -75,6 +77,7 @@ export const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 700,
         lineHeight: 15,
+        fontFamily: 'SVN-Gotham'
     },
     footerContainer: {
         width: 217,
@@ -83,16 +86,16 @@ export const styles = StyleSheet.create({
     paginationContainer: {
         flexDirection: 'row',
         width: 124,
+        height: 29,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 5
+        marginBottom: 10
     },
     buttonPagi: {
         width: 29,
         height: 29,
         backgroundColor: '#FEFF0B',
         borderRadius: 29/2,
-        alignItems: 'center',
 
     },
     pageIndicator: {
@@ -104,9 +107,9 @@ export const styles = StyleSheet.create({
     pageButtonText: {
         color: '#BC000E',
         fontSize: 17.67,
-        borderRadius: 20,
         textAlign: 'center',
-        fontWeight: 'bold',
+        fontWeight: 700,
+        fontFamily : 'SVN-Cookies'
     },
     buttonDisabled :{
         backgroundColor: '#C0C0C0',
@@ -118,4 +121,14 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    closeButton: {
+        position: 'relative',
+        left: 130,
+        top: 40,
+        zIndex  :10
+    },
+    close :{
+        width: 32.5,
+        height: 34.12
+    }
 });

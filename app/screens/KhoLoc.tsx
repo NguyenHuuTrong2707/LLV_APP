@@ -20,7 +20,8 @@ interface Gift {
     imgQua: string
     quantity: number
     type?: string
-    giftcode: string
+    giftcode: string,
+    status: string
 }
 const db = getFirestore(app);
 const Page_KhoLoc: React.FC = () => {
@@ -29,6 +30,7 @@ const Page_KhoLoc: React.FC = () => {
     const { user } = useAuth();
     const [userGifts, setUserGifts] = useState<Gift[]>([])
     const [selectedTab, setSelectedTab] = useState<string | null>('Lắc lộc vàng')
+    const [tongQuaChuaNhan, setTongQuaChuaNhan] = useState(0);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
@@ -59,35 +61,53 @@ const Page_KhoLoc: React.FC = () => {
     useEffect(() => {
         if (!user) return;
         const userRef = doc(db, "users", user.uid);
-
+    
         const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
                 const rawGifts: Gift[] = data.khoLoc || [];
-
-                // Nhóm phần quà
-                const groupedGifts: { [key: string]: Gift & { quantity: number } } = {};
+                // tinh tong qua chua nhan
+                let tinhTongQuaChuaNhan = 0
+                // Nhóm phần quà theo id_qua và trạng thái
+                const groupedGifts: { [key: string]: { danhan: Gift | null; chuanhan: Gift | null } } = {};
                 const giftCodes: Gift[] = [];
-
+    
                 rawGifts.forEach((gift) => {
                     if (gift.giftcode) {
                         giftCodes.push(gift);
                     }
-
-                    if (groupedGifts[gift.id_qua]) {
-                        groupedGifts[gift.id_qua].quantity += 1;
+    
+                    if (!groupedGifts[gift.id_qua]) {
+                        groupedGifts[gift.id_qua] = { danhan: null, chuanhan: null };
+                    }
+    
+                    if (gift.status === "Đã nhận") {
+                        if (groupedGifts[gift.id_qua].danhan) {
+                            groupedGifts[gift.id_qua].danhan!.quantity += 1;
+                        } else {
+                            groupedGifts[gift.id_qua].danhan = { ...gift, quantity: 1 };
+                        }
                     } else {
-                        groupedGifts[gift.id_qua] = { ...gift, quantity: 1 };
+                        tinhTongQuaChuaNhan += 1
+                        if (groupedGifts[gift.id_qua].chuanhan) {
+                            groupedGifts[gift.id_qua].chuanhan!.quantity += 1;
+                        } else {
+                            groupedGifts[gift.id_qua].chuanhan = { ...gift, quantity: 1 };
+                        }
                     }
                 });
-
-                // Cập nhật state
-                setUserGifts(selectedTab === 'Mã số may mắn' ? giftCodes : Object.values(groupedGifts));
+    
+                const processedGifts = Object.values(groupedGifts)
+                .flatMap(({ danhan, chuanhan }) => [chuanhan, danhan])
+                .filter((gift): gift is Gift => gift !== null);            
+                setUserGifts(selectedTab === 'Mã số may mắn' ? giftCodes : processedGifts);
+                setTongQuaChuaNhan(tinhTongQuaChuaNhan)
             }
         });
-
+    
         return () => unsubscribe();
     }, [user, selectedTab]);
+    
     // lọc dữ liệu theo danh mục
     const filteredData = userGifts.filter((gift) => {
         if (selectedTab === 'Lắc lộc vàng') return true; // Hiển thị tất cả
@@ -154,6 +174,9 @@ const Page_KhoLoc: React.FC = () => {
                                         <Text style={styles.count}>
                                             Trạng thái:
                                         </Text>
+                                        <Text style={[styles.count, item.status === 'Đã nhận' ? styles.txtDaNhan : styles.txtChuaNhan]}>
+                                            {item.status}
+                                        </Text>
                                     </ImageBackground>
                                 </View>
                             ) : (
@@ -177,12 +200,19 @@ const Page_KhoLoc: React.FC = () => {
                                             <Text style={styles.count}>
                                                 Trạng thái:
                                             </Text>
+                                            <Text style={[styles.count, item.status === 'Đã nhận' ? styles.txtDaNhan : styles.txtChuaNhan]}>
+                                                {item.status}
+                                            </Text>
                                         </View>
                                     </ImageBackground>
                                 </View>
                             )
                         )}
                     />
+                    {/* Tổng quà chưa nhận thưởng */}
+                    <Text
+                    style = {styles.countGiftChuaNhan}
+                    >Tổng số quà chưa nhận thưởng là: <Text style = {{color : '#c2030b', fontSize: 18}}>{tongQuaChuaNhan}</Text> </Text>
                 </ImageBackground>
             </SafeAreaView>
         </ImageBackground>

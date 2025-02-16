@@ -8,7 +8,7 @@ const getGiftType = (gift: { name: string }): string | null => {
     }
     return null; 
 };
-const addGiftToKhoLoc = async (userId: string, gift: {id : string, name: string; image: string; code: string }) => {
+const addGiftToKhoLoc = async (userId: string, gift: {id : string, name: string; image: string; code: string, status : string }) => {
     try {
         if (!userId) {
             console.error("Không tìm thấy userId!");
@@ -18,7 +18,7 @@ const addGiftToKhoLoc = async (userId: string, gift: {id : string, name: string;
         const userRef = doc(db, "users", userId);
         const kho_loc_id = uuid.v4(); 
         const type = getGiftType(gift);
-        //fotmat ngày giờ nhận quàquà
+        //fotmat ngày giờ nhận quà
         const timestamp = new Date();
         const formattedDate = timestamp.toLocaleString('vi-VN', {
           year: 'numeric', 
@@ -36,6 +36,7 @@ const addGiftToKhoLoc = async (userId: string, gift: {id : string, name: string;
             giftcode: gift.code,
             name: gift.name,
             imgQua: gift.image,
+            status : gift.status,
             timestamp: formattedDate,
         };
 

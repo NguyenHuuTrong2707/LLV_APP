@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
         lineHeight: 19,
         textAlign: 'center',
         color: '#FFF',
-        fontWeight: 'bold',
+        fontWeight: 700,
+        fontFamily :'SVN-Gotham'
     }
 });

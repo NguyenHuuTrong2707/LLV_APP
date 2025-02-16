@@ -136,7 +136,13 @@ const Page_LacLocVang: React.FC = () => {
           content="WOW, THÁNH LẮC VÀNG ĐÂY RỒI,GIÀU TO RỒI ANH EM ƠI!"
           onClose={async () => {
             if (gift && user?.uid) {
-              await addGiftToKhoLoc(user.uid, gift);
+              await addGiftToKhoLoc(user.uid, {...gift, status :'Chưa nhận'});
+            }
+            setPopupVisible(false);
+          }}
+          onConfirm={async () => {
+            if (gift && user?.uid) {
+              await addGiftToKhoLoc(user.uid, {...gift, status :'Đã nhận'});
             }
             setPopupVisible(false);
           }}
@@ -148,12 +154,21 @@ const Page_LacLocVang: React.FC = () => {
               imgUrl: gift.image,
               giftcode: gift.code,
             }))}
-            onClose={async () => {
+            onConfirm={async () => {
               if (gifts.length > 0 && user?.uid) {
-                await Promise.all(gifts.map((gift) => addGiftToKhoLoc(user.uid, gift)));
+                await Promise.all(gifts.map((gift) => addGiftToKhoLoc(user.uid, {...gift , status :'Đã nhận'})));
               }
               setPopupMultiVisible(false);
             }}
+            onClose={async () => {
+              if (gifts.length > 0 && user?.uid) {
+                await Promise.all(
+                  gifts.map((gift) => addGiftToKhoLoc(user.uid, { ...gift, status: "Chưa nhận" }))
+                );
+              }
+              setPopupMultiVisible(false);
+            }}
+            
           />
         )}
       </SafeAreaView>

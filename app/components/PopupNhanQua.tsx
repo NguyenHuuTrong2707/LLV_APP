@@ -5,6 +5,7 @@ import { app } from "../../firebase/firebaseConfig";
 import ButtonComponent from "./ButtonCompont";
 import { useRouter } from "expo-router";
 import { styles } from './stylesComponent/PopupNhanQuaStyles';
+import { TouchableOpacity } from "react-native";
 
 interface Page_PopUpNhanQua {
     imgBackGround: string
@@ -16,9 +17,10 @@ interface PopUpNhanQua_Props {
     giftcode: string,
     content: string,
     onClose : () => void,
+    onConfirm : () => void
 }
 const db = getFirestore(app)
-const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, imgQua1, giftcode, content , onClose}) => {
+const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, imgQua1, giftcode, content , onClose, onConfirm}) => {
     const [page_PopupNhanQua, setPage_PopupNhanQua] = useState<Page_PopUpNhanQua | null>(null);
     const router = useRouter();
     useEffect(() => {
@@ -46,6 +48,9 @@ const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, imgQua1, giftcode,
     return (
         <View style={styles.overlay}>
             <View style={styles.container}>
+                  <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                                    <Image source={require('../../assets/images/closepopup.png')} style={styles.close} />
+                                </TouchableOpacity>
                 <Image source={{ uri: page_PopupNhanQua?.logo }} style={styles.logo} />
                 <ImageBackground source={{ uri: page_PopupNhanQua?.imgBackGround }} style={styles.img} >
                     <View style={styles.contentContainer}>
@@ -64,7 +69,7 @@ const PopUpNhanQua: React.FC<PopUpNhanQua_Props> = ({ title1, imgQua1, giftcode,
                 </ImageBackground>
             </View>
             <ButtonComponent title="Chia sẻ" onPress={() => { }} />
-            <ButtonComponent title="Nhận lộc" onPress={onClose} />
+            <ButtonComponent title="Nhận lộc" onPress={onConfirm} />
         </View>
     );
 

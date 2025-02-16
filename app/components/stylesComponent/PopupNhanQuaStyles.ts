@@ -35,11 +35,10 @@ export const styles = StyleSheet.create({
     title: {
         color: '#C2030B',
         textAlign: 'center',
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontWeight: 400,
         lineHeight: 20,
-        marginBottom: 5,
-        fontFamily: 'SVN-Cookie'
+        fontFamily: 'SVN-Cookies'
     },
     imgQuaContainer: {
         flexDirection: 'row',
@@ -70,5 +69,15 @@ export const styles = StyleSheet.create({
     },
     footerContainer: {
         width: 198,
+    },
+    closeButton: {
+        position: 'relative',
+        left: 130,
+        top: 40,
+        zIndex  :10
+    },
+    close :{
+        width: 32.5,
+        height: 34.12
     }
 });

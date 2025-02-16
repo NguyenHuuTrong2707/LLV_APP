@@ -51,6 +51,7 @@ export const styles = StyleSheet.create({
         color: "#732F2F",
         textAlign: 'center',
         lineHeight: 13,
+        fontFamily: 'SVN-Gotham'
     },
     countContainer: {
         alignItems: 'center',
@@ -84,7 +85,7 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#c2030a',
         fontFamily: 'SVN-Cookies',
-        fontSize : 12
+        fontSize: 12
     },
     giftcode: {
         textAlign: 'center',
@@ -95,16 +96,31 @@ export const styles = StyleSheet.create({
     imgGiftCode: {
         width: 74,
         height: 43,
-        flex :1,
+        flex: 1,
         alignItems: 'center',
         padding: 9,
-        position :'relative',
+        position: 'relative',
         top: 10,
     },
-    imgGiftContainer : {
-        width : 96,
+    imgGiftContainer: {
+        width: 96,
         height: 155,
         alignItems: 'center',
         padding: 10,
-    }
+    },
+    txtDaNhan: {
+        color: '#2e8718'
+    },
+    txtChuaNhan: {
+        color: '#c2030b'
+    },
+    countGiftChuaNhan :{
+        textAlign :'center',
+        paddingVertical: 10,
+        fontFamily: 'SVN-Gotham',
+        fontSize: 12,
+        color: '#732f2f',
+        lineHeight: 24
+    },
+    
 });

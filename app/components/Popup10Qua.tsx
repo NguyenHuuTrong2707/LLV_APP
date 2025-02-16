@@ -9,7 +9,7 @@ import ButtonComponent from "./ButtonCompont";
 interface Page_PopUp10Qua {
     imgbg10qua: string,
     title10qua: string
-    content10qua : string
+    content10qua: string
 }
 
 interface GiftItem {
@@ -19,13 +19,14 @@ interface GiftItem {
 }
 
 interface PopUp10Qua_Props {
-    gifts: GiftItem[]; 
+    gifts: GiftItem[];
     onClose: () => void;
+    onConfirm : () => void;
 }
 
 const db = getFirestore(app);
 
-const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
+const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose, onConfirm }) => {
     const [page_Popup10Qua, setPage_Popup10Qua] = useState<Page_PopUp10Qua | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const router = useRouter();
@@ -43,7 +44,7 @@ const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
                     setPage_Popup10Qua({
                         imgbg10qua: data.imgbg10qua,
                         title10qua: data.title10qua,
-                        content10qua : data.content10qua
+                        content10qua: data.content10qua
                     });
                 });
             },
@@ -70,6 +71,10 @@ const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
     return (
         <View style={styles.overlay}>
             <View style={styles.container}>
+                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                    <Image source={require('../../assets/images/closepopup.png')} style={styles.close} />
+                </TouchableOpacity>
+
                 <ImageBackground source={{ uri: page_Popup10Qua?.imgbg10qua }} style={styles.img}>
                     <View style={styles.contentContainer}>
                         <Text style={styles.title}>{page_Popup10Qua?.title10qua}</Text>
@@ -112,7 +117,7 @@ const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
                                 disabled={currentIndex === gifts.length - 1}
                             >
                                 <LinearGradient
-                                    colors={currentIndex === gifts.length - 1 ? ['#BEBEBE', '#8A8A8A'] : ['#FEFF0B', '#FFDF00']} 
+                                    colors={currentIndex === gifts.length - 1 ? ['#BEBEBE', '#8A8A8A'] : ['#FEFF0B', '#FFDF00']}
                                     style={styles.buttonPagi}
                                 >
                                     <Text
@@ -135,7 +140,7 @@ const PopUpNhanQua: React.FC<PopUp10Qua_Props> = ({ gifts, onClose }) => {
                 </ImageBackground>
             </View>
             <ButtonComponent title="Chia sẻ" onPress={() => { }} />
-            <ButtonComponent title="Đã nhận" onPress={onClose} disabled={currentIndex !== gifts.length - 1}   />
+            <ButtonComponent title="Đã nhận" onPress={onConfirm} disabled={currentIndex !== gifts.length - 1} />
         </View>
     );
 };

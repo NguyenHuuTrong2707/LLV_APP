@@ -6,6 +6,7 @@ import { ActivityIndicator} from "react-native";
 export default function Index() {
   const [fontsLoaded] = useFonts({
     'SVN-Cookies': require('../assets/fonts/SVN-Cookies.ttf'),
+    'SVN_Gotham' :require('../assets/fonts/SVN-Gotham Black.otf')
   });
 
 

@@ -37,7 +37,8 @@ export const styles = StyleSheet.create({
         color: '#FFF',
         fontWeight: '700',
         fontSize: 10,
-        lineHeight: 15
+        lineHeight: 15,
+        fontFamily: 'SVN-Gotham'
     },
     titleGiaiNhi: {
         position: 'absolute',
@@ -46,9 +47,10 @@ export const styles = StyleSheet.create({
         width: 102,
         textAlign: 'center',
         color: '#FAD93C',
-        fontWeight: '700',
+        fontWeight: 700,
         fontSize: 14,
-        lineHeight: 18
+        lineHeight: 18,
+        fontFamily: 'SVN-Gotham'
     },
     imgGiaiNhat: {
         position: 'absolute',
@@ -66,7 +68,8 @@ export const styles = StyleSheet.create({
         color: '#FFF',
         fontWeight: '700',
         fontSize: 10,
-        lineHeight: 15
+        lineHeight: 15,
+        fontFamily: 'SVN-Gotham'
     },
     titleGiaiNhat: {
         position: 'absolute',
@@ -76,7 +79,8 @@ export const styles = StyleSheet.create({
         color: '#FAD93C',
         fontWeight: '700',
         fontSize: 16,
-        lineHeight: 19
+        lineHeight: 19,
+        fontFamily: 'SVN-Gotham'
     },
     imgGiaiBa: {
         position: 'absolute',
@@ -94,7 +98,8 @@ export const styles = StyleSheet.create({
         color: '#FFF',
         fontWeight: '700',
         fontSize: 10,
-        lineHeight: 15
+        lineHeight: 15,
+        fontFamily: 'SVN-Gotham'
     },
     titleGiaiBa: {
         position: 'absolute',
@@ -105,7 +110,8 @@ export const styles = StyleSheet.create({
         color: '#FAD93C',
         fontWeight: '700',
         fontSize: 14,
-        lineHeight: 18
+        lineHeight: 18,
+        fontFamily: 'SVN-Gotham'
     },
     vong1Container: {
         position: 'absolute',
@@ -156,5 +162,6 @@ export const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#F5D77F',
         paddingTop : 5,
+        fontFamily: 'SVN-Gotham'
     }
 });
