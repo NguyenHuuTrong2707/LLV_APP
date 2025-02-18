@@ -6,16 +6,27 @@ import { Image, ImageBackground, Text, View } from 'react-native';
 import Header from '../components/Header'
 import ButtonComponent from '../components/ButtonCompont'
 import { SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import { useNavigation } from 'expo-router';
+
 interface Page_ThanhLiXi {
     imgbanner: string
     minibanner: string
     title: string
     mission: string
 }
+type RootStackParamList = {
+    ThanhLiXi : undefined;
+    Wating: undefined; 
+  };
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ThanhLiXi'>;
 const db = getFirestore(app)
 const Page_ThanhLiXi: React.FC = () => {
     const [page_thanhlixi, setPageThanhLiXi] = useState<Page_ThanhLiXi | null>(null)
+    const navigation = useNavigation<NavigationProp>()
+    const goToTimDoiThu  = () => {
+        navigation.navigate('Wating')
+    }
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_DapNhanhTranhLiXi"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -70,7 +81,7 @@ const Page_ThanhLiXi: React.FC = () => {
                 {/* Tim doi thu */}
                 <ButtonComponent
                     title='Tìm đối thủ'
-                    onPress={() => { }}
+                    onPress={goToTimDoiThu}
                 />
                 {/* Note */}
                 <View style={styles.noteContainer}>

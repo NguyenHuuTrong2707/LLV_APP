@@ -15,7 +15,7 @@ type RootStackParamList = {
     Vong1: undefined; 
     ThanhLiXi : undefined;
   };
-  type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Vong1'>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Vong1'>;
 const db = getFirestore(app)
 const Page_Vong1: React.FC = () => {
     const [page_vong1, setPageVong1] = useState<Page_Vong1 | null>(null)
