@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, Alert, ImageBackground, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { styles } from "./styles/LacLocVang";
+import styles  from "./styles/LacLocVangStyle";
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import Header from "../components/Header";

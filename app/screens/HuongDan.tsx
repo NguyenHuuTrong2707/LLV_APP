@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { styles } from "./styles/HuongDanStyle";
+import  styles  from "./styles/HuongDanStyle";
 import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
 import { Image, ImageBackground, Text, View } from 'react-native';

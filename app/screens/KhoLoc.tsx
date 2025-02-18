@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, ImageBackground, Text, View, TouchableOpacity } from 'react-native';
-import { styles } from './styles/KhoLocStyle'
+import  styles  from './styles/KhoLocStyle'
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'react-native';
 import { useAuth } from "@/contexts/AuthContext";
-import { ScrollView } from 'react-native';
 interface Page_KhoLoc {
     imgBackGround: string
     imgFrame: string
@@ -213,8 +212,6 @@ const Page_KhoLoc: React.FC = () => {
                         
                     />
                     {/* Tổng quà chưa nhận thưởng */}
-
-
                     {selectedTab === 'Lắc lộc vàng' && (
                         <Text style={styles.countGiftChuaNhan}>
                             Tổng số quà chưa nhận thưởng là: <Text style={{ color: '#c2030b', fontSize: 18 }}>{tongQuaChuaNhan}</Text>

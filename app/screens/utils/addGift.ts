@@ -14,7 +14,6 @@ const addGiftToKhoLoc = async (userId: string, gift: {id : string, name: string;
             console.error("Không tìm thấy userId!");
             return;
         }
-
         const userRef = doc(db, "users", userId);
         const kho_loc_id = uuid.v4(); 
         const type = getGiftType(gift);

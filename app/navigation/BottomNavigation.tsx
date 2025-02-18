@@ -1,11 +1,10 @@
 import React from "react";
 import { Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import BanKet from "../screens/BanKet";  
 import Page_LacLocVang from "../screens/LacLocVang"; 
 import Page_KhoLoc from "../screens/KhoLoc";
-import { styles } from '../navigation/styleNavigation/BottomStyle';
-
+import  styles  from '../navigation/styleNavigation/BottomStyle';
+import BanKetStack from "./BanKetStack";
 const Tab = createBottomTabNavigator();
 
 export default function BottomNavigation() { 
@@ -15,6 +14,7 @@ export default function BottomNavigation() {
           tabBarStyle: styles.tabBar,
           tabBarLabelStyle: styles.label,
           headerShown: false,
+          tabBarItemStyle: styles.tabarItem,
         }}
       >
         <Tab.Screen
@@ -25,18 +25,18 @@ export default function BottomNavigation() {
               <Image source={require("../../assets/images/phoneIcon.png")} style={styles.icon} />
             ),
             tabBarLabel: "Lắc Lộc Vàng",
-            
+            tabBarActiveBackgroundColor: '#FFD233',
           }}
         />
         <Tab.Screen
           name="LiXiVang"
-          component={BanKet}
+          component={BanKetStack}
           options={{
             tabBarIcon: () => (
               <Image source={require("../../assets/images/lixiIcon.png")} style={styles.icon} />
             ),
             tabBarLabel: "Lì Xì Vàng",
-           
+            tabBarActiveBackgroundColor: '#FFD233',
           }}
         />
         <Tab.Screen
@@ -47,6 +47,7 @@ export default function BottomNavigation() {
               <Image source={require("../../assets/images/khoLocIcon.png")} style={styles.icon} />
             ),
             tabBarLabel: "Kho Lộc",
+            tabBarActiveBackgroundColor: '#FFD233',
           }}
         />
       </Tab.Navigator>

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
     banner: {
         flex: 1,
     },
@@ -35,3 +35,4 @@ export const styles = StyleSheet.create({
         fontFamily :'SVN-Gotham'
     }
 });
+export default styles

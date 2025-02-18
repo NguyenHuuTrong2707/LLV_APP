@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
     overlay: {
         position: 'absolute',  
         top: 0,
@@ -28,3 +28,4 @@ export const styles = StyleSheet.create({
         left: 80,
     },
 });
+export default styles

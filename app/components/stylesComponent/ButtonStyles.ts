@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
     button: {
         width: 179,
         height: 44,
@@ -9,12 +9,14 @@ export const styles = StyleSheet.create({
         borderWidth: 2,
         overflow: 'hidden',
         marginBottom: 10,
+    
     },
     content: {
         textAlign: 'center',
         color: '#c2030b',
         fontWeight: 'bold',
-        fontFamily: 'SVN-Cookies'
+        fontFamily: 'SVN-Cookies',
+        fontSize: 16
     },
     gradient: {
         flex: 1,
@@ -29,3 +31,4 @@ export const styles = StyleSheet.create({
         color : '#FFF'
     }
 });
+export default styles

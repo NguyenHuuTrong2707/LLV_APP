@@ -3,7 +3,7 @@ import { View, Image, ImageBackground, Text, TouchableOpacity } from "react-nati
 import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import { useRouter } from "expo-router";
-import { styles } from './stylesComponent/Popup10QuaStyle';
+import styles  from './stylesComponent/Popup10QuaStyle';
 import { LinearGradient } from 'expo-linear-gradient';
 import ButtonComponent from "./ButtonCompont";
 interface Page_PopUp10Qua {

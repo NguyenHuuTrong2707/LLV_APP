@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import { styles } from '../components/stylesComponent/HeaderStyle'
+import  styles  from '../components/stylesComponent/HeaderStyle'
 
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -8,9 +8,10 @@ interface HeaderProps {
   title?: string
   titleImage?: any
   imageHelp?: any
+  color?: object
 }
 
-const Header: React.FC<HeaderProps> = ({ title, titleImage, imageHelp }) => {
+const Header: React.FC<HeaderProps> = ({ title, titleImage, imageHelp, color }) => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const handleBack = () => {
     if (navigation.canGoBack()) {
@@ -31,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ title, titleImage, imageHelp }) => {
       {titleImage ? (
         <Image source={titleImage} style={styles.titleImage} resizeMode="contain" />
       ) : (
-        <Text style={styles.titleText}>{title}</Text>
+        <Text style={[styles.titleText,color]}>{title}</Text>
       )}
       </View>
       {/* Button Help */}

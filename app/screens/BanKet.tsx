@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { styles } from '../screens/styles/BanKetStyle'
+import styles  from '../screens/styles/BanKetStyle'
 import { collection, getFirestore, onSnapshot } from 'firebase/firestore'
 import { app } from '../../firebase/firebaseConfig';
-import { Image, ImageBackground, Text, View } from 'react-native'
+import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native'
 import Header from '../components/Header'
 import { SafeAreaView } from 'react-native'
+import { useNavigation } from 'expo-router';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+//Khai bao kieu cho navigation
+type RootStackParamList = {
+    BanKetScreen: undefined;
+    Vong1: undefined; 
+  };
+  type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'BanKetScreen'>;
 interface Page_BanKet {
     contentChungKet: string
     contentGiaiBa: string
@@ -24,7 +32,11 @@ interface Page_BanKet {
 const db = getFirestore(app)
 const Page_BanKet: React.FC = () => {
     const [page_BanKet, setPage_BanKet] = useState<Page_BanKet | null>(null)
-    const isInsideNavContainer = false;
+   const navigation = useNavigation<NavigationProp>(); 
+//    Chuyển sang vòng 1 
+const goToVong1 = () => {
+    navigation.navigate("Vong1"); 
+  };
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_BanKet"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -109,6 +121,9 @@ const Page_BanKet: React.FC = () => {
                     </Text>
                     {/* Vong 1 */}
                     <View style={styles.vong1Container}>
+                    <TouchableOpacity
+                    onPress={goToVong1}
+                    >
                         <Image source={{ uri: page_BanKet?.imgVong1 }}
                             style={styles.imgVong1}
                         />
@@ -117,7 +132,9 @@ const Page_BanKet: React.FC = () => {
                         >
                             {page_BanKet?.contentVong1}
                         </Text>
+                    </TouchableOpacity>
                     </View>
+                   
                     {/* Vong 2 */}
                     <View style={styles.vong2Container}>
                         <Image source={{ uri: page_BanKet?.imgVong2 }}

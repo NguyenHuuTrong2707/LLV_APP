@@ -4,7 +4,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../firebase/firebaseConfig";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
-import { styles } from './screens/styles/LoginStyle'
+import  styles  from './screens/styles/LoginStyle'
 import PopupXinChao from "./components/PopupXinChao";
 const auth = getAuth(app);
 

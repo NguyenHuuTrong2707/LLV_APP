@@ -4,7 +4,7 @@ import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import ButtonComponent from "./ButtonCompont";
 import { useRouter } from "expo-router";
-import { styles } from './stylesComponent/PopupStyles';
+import styles  from './stylesComponent/PopupStyles';
 interface Page_Popup {
     img: string;
 }

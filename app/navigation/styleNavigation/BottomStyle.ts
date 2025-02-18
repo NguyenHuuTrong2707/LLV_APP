@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
   icon: {
     width: 29,  
     height: 29, 
@@ -23,4 +23,10 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 12, 
     borderTopRightRadius: 12,
   },
+  tabarItem: {
+    height: 70 
+    
+  }
+
 });
+export default styles

@@ -1,9 +1,8 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
     marginTop: 40,
   },
   backButton: {
@@ -33,9 +32,9 @@ export const styles = StyleSheet.create({
     height: 40,
   },
   titleContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
   },
 });
+export default styles
