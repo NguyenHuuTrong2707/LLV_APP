@@ -1,4 +1,4 @@
-import { doc, updateDoc,getFirestore, arrayUnion, increment } from "firebase/firestore";
+import { doc, updateDoc,getFirestore, arrayUnion } from "firebase/firestore";
 import uuid from "react-native-uuid";
 import { app } from "@/firebase/firebaseConfig";
 const db = getFirestore(app)

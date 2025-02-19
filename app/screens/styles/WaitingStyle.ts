@@ -1,4 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+// Lấy chiều cao và chiều rộng của màn hình
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
     imgbg: {
@@ -7,7 +10,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-      
     },
     title: {
         paddingVertical: 10,
@@ -15,22 +17,22 @@ const styles = StyleSheet.create({
         lineHeight: 30,
         color: '#FFE933',
         fontFamily: 'SVN-Gotham',
-        fontWeight: 700
+        fontWeight: '700'
     },
-    txtLoad:{
+    txtLoad: {
         fontSize: 16,
         lineHeight: 20,
         color: '#FFF',
         fontFamily: 'SVN-Gotham',
     },
-    avt:{
+    avt: {
         width: 180,
         height: 188,
         position: 'absolute',
-        top: 250,
+        top: height * 0.25,  
         marginBottom: 30
     },
-    txtUserName:{
+    txtUserName: {
         width: 120,
         textAlign: 'center',
         fontSize: 16,
@@ -38,24 +40,24 @@ const styles = StyleSheet.create({
         fontFamily: 'SVN-Cookies',
         color: '#FFE995',
         position: 'absolute',
-        top: 440,
+        top: height * 0.48,  
     },
-    txtTime:{
+    txtTime: {
         fontSize: 24,
         lineHeight: 30,
         fontFamily: 'SVN-Gotham',
         textAlign: 'center',
         color: '#F5D77F',
         position: 'absolute',
-        top: 530,
+        top: height * 0.59, 
     },
-    note:{
+    note: {
         width: 294,
         height: 66,
         position: 'absolute',
-        bottom: 100,
+        bottom: height * 0.1,  
         alignSelf: 'center'
     }
-
 });
-export default styles
+
+export default styles;

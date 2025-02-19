@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import  styles  from "./styles/ThanhLiXiStyle";
-import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
+import styles from "./styles/ThanhLiXiStyle";
+import { collection, getFirestore, onSnapshot, doc, setDoc, getDoc, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
 import { Image, ImageBackground, Text, View } from 'react-native';
 import Header from '../components/Header'
@@ -8,7 +8,8 @@ import ButtonComponent from '../components/ButtonCompont'
 import { SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { useNavigation } from 'expo-router';
-
+import { getUserLocation } from './utils/getLocation';
+import { useAuth } from '@/contexts/AuthContext';
 interface Page_ThanhLiXi {
     imgbanner: string
     minibanner: string
@@ -16,17 +17,43 @@ interface Page_ThanhLiXi {
     mission: string
 }
 type RootStackParamList = {
-    ThanhLiXi : undefined;
-    Wating: undefined; 
-  };
+    ThanhLiXi: undefined;
+    Wating: undefined;
+};
+
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ThanhLiXi'>;
 const db = getFirestore(app)
 const Page_ThanhLiXi: React.FC = () => {
     const [page_thanhlixi, setPageThanhLiXi] = useState<Page_ThanhLiXi | null>(null)
     const navigation = useNavigation<NavigationProp>()
-    const goToTimDoiThu  = () => {
+    const { user } = useAuth();
+    const goToTimDoiThu = async () => {
+        const location = await getUserLocation();
+        if (!location) {
+            console.log("Không lấy được vị trí.");
+            return;
+        }
+        const userDocRef = doc(db, "players", user?.uid);
+        const userDocSnap = await getDoc(doc(db, "users", user.uid));
+
+        let username = "Người chơi"; 
+        if (userDocSnap.exists()) {
+            username = userDocSnap.data()?.username || "Người chơi"; 
+        } else {
+            username = user?.displayName || "Người chơi";
+        }
+        await setDoc(userDocRef, {
+            uid: user?.uid,
+            username: username,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            timestamp: new Date()
+        });
         navigation.navigate('Wating')
+        
     }
+    
+    
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_DapNhanhTranhLiXi"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -85,8 +112,8 @@ const Page_ThanhLiXi: React.FC = () => {
                 />
                 {/* Note */}
                 <View style={styles.noteContainer}>
-                    <Text style ={styles.txtNote}>Lưu ý: Người chơi chiến thắng sẽ nhận được <Text style ={styles.highLight}>+1 lì xì</Text>
-                        . Mỗi người chơi chỉ nhận được <Text style = {styles.highLight}>1 lượt chơi 1 ngày</Text></Text>
+                    <Text style={styles.txtNote}>Lưu ý: Người chơi chiến thắng sẽ nhận được <Text style={styles.highLight}>+1 lì xì</Text>
+                        . Mỗi người chơi chỉ nhận được <Text style={styles.highLight}>1 lượt chơi 1 ngày</Text></Text>
                 </View>
             </ImageBackground>
         </SafeAreaView>

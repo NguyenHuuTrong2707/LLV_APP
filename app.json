@@ -32,7 +32,15 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Ứng dụng cần vị trí của bạn để hoạt động chính xác ngay cả khi bạn không mở ứng dụng.",
+          "locationWhenInUsePermission": "Ứng dụng cần quyền truy cập vị trí khi bạn sử dụng để tìm đối thủ gần nhất."
+        }
       ]
+      
     ],
     "experiments": {
       "typedRoutes": true
