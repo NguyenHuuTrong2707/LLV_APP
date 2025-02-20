@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-
+import { Platform } from "react-native";
 // Lấy chiều cao và chiều rộng của màn hình
 const { width, height } = Dimensions.get("window");
 
@@ -39,8 +39,10 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         fontFamily: 'SVN-Cookies',
         color: '#FFE995',
+    },
+    containerUsername:{
         position: 'absolute',
-        top: height * 0.48,  
+        top: height * 0.46,  
     },
     txtTime: {
         fontSize: 24,
@@ -48,8 +50,11 @@ const styles = StyleSheet.create({
         fontFamily: 'SVN-Gotham',
         textAlign: 'center',
         color: '#F5D77F',
+       
+    },
+    containerTime:{
         position: 'absolute',
-        top: height * 0.59, 
+        top: Platform.OS === "ios" ? height * 0.59 : height * 0.55 , 
     },
     note: {
         width: 294,

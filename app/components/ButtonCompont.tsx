@@ -12,7 +12,7 @@ interface ButtonProps {
 const ButtonComponent: React.FC<ButtonProps> = ({ title, buttonStyle, disabled = false, onPress }) => {
     const isCustomColor = !!(buttonStyle as ViewStyle)?.backgroundColor;
     return (
-        <TouchableOpacity style={[styles.button, disabled && styles.disabledButton]}
+        <TouchableOpacity style={[styles.button,buttonStyle, disabled && styles.disabledButton]}
             disabled={disabled}
             onPress={!disabled ? onPress : undefined}
         >

@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native';
 import { useAuth } from "@/contexts/AuthContext";
 import { getDistance } from './utils/location';
 import { getUserLocation } from './utils/getLocation';
+import { Alert } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 interface Page_Waiting {
@@ -24,6 +25,7 @@ type Player = {
 }
 export type RootStackParamList = {
     Waiting : undefined;
+    ThanhLiXi : undefined;
     TimDuocDoiThu: { opponentName: string };
   };
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Waiting'>;
@@ -32,7 +34,7 @@ const Page_Waiting: React.FC = () => {
     const [page_waiting, setPageWating] = useState<Page_Waiting | null>(null)
     const { user } = useAuth();
     const [userName, setUserName] = useState<string>('Anonymous')
-    const [timeElapsed, setTimeElapsed] = useState(30);
+    const [timeElapsed, setTimeElapsed] = useState(60);
     const [isSearching, setIsSearching] = useState(true);
     const userRef = user?.uid ? doc(db, "players", user.uid) : null;
     const [opponentFound, setOpponentFound] = useState(false);
@@ -98,7 +100,20 @@ const Page_Waiting: React.FC = () => {
             }, 1000);
             return () => clearInterval(timer);
         }
+        
     }, [timeElapsed, isSearching]);
+    //Thong bao khi không tim thay doi thu
+    useEffect(() => {
+        if (timeElapsed === 0 && !opponentFound) {
+            Alert.alert(
+                "Thông báo",
+                "Không tìm thấy đối thủ. Vui lòng thử lại sau!",
+                [{ text: "OK", onPress: () => navigation.goBack() }]
+            );
+            setIsSearching(false);
+        }
+    }, [timeElapsed, opponentFound, navigation]);
+    
     useEffect(() => {
         if (!isSearching || opponentFound) return;
         const playersRef = collection(db, "players");
@@ -176,9 +191,14 @@ const Page_Waiting: React.FC = () => {
                     resizeMode='cover'
                 ></Image>
                 {/* Ten user */}
+                <View style = {styles.containerUsername}>
                 <Text style={styles.txtUserName}>{userName}</Text>
+                </View>
                 {/* Thoi gian */}
+                <View style ={styles.containerTime}>
+
                 <Text style={styles.txtTime}>{formatTime(timeElapsed)}</Text>
+                </View>
                 {/* Note */}
                 <Image
                     source={{ uri: page_waiting?.imgnote }}
