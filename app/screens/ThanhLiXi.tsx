@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styles from "./styles/ThanhLiXiStyle";
 import { collection, getFirestore, onSnapshot, doc, setDoc, getDoc, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
-import { Image, ImageBackground, Text, View } from 'react-native';
+import { ImageBackground, Text, View } from 'react-native';
+import { ImageBackground as ExpoImage } from "expo-image";
 import Header from '../components/Header'
 import ButtonComponent from '../components/ButtonCompont'
 import { SafeAreaView } from 'react-native';
@@ -36,9 +37,9 @@ const Page_ThanhLiXi: React.FC = () => {
         const userDocRef = doc(db, "players", user?.uid);
         const userDocSnap = await getDoc(doc(db, "users", user.uid));
 
-        let username = "Người chơi"; 
+        let username = "Người chơi";
         if (userDocSnap.exists()) {
-            username = userDocSnap.data()?.username || "Người chơi"; 
+            username = userDocSnap.data()?.username || "Người chơi";
         } else {
             username = user?.displayName || "Người chơi";
         }
@@ -50,10 +51,10 @@ const Page_ThanhLiXi: React.FC = () => {
             timestamp: new Date()
         });
         navigation.navigate('Wating')
-        
+
     }
-    
-    
+
+
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_DapNhanhTranhLiXi"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -82,10 +83,11 @@ const Page_ThanhLiXi: React.FC = () => {
                 color={{ color: '#FFF9D1' }}
             />
             {/* Content */}
-            <ImageBackground
+            <ExpoImage
                 source={{ uri: page_thanhlixi?.imgbanner }}
                 style={styles.contentContainer}
-                resizeMode='cover'
+                contentFit="cover"
+                cachePolicy="memory-disk"
             >
                 <Text
                     style={styles.title}
@@ -102,7 +104,7 @@ const Page_ThanhLiXi: React.FC = () => {
                     >{page_thanhlixi?.mission}</Text>
                 </View>
                 {/* Mini banner */}
-                <Image source={{ uri: page_thanhlixi?.minibanner }}
+                <ImageBackground source={{ uri: page_thanhlixi?.minibanner }}
                     style={styles.minibanner}
                 />
                 {/* Tim doi thu */}
@@ -115,7 +117,7 @@ const Page_ThanhLiXi: React.FC = () => {
                     <Text style={styles.txtNote}>Lưu ý: Người chơi chiến thắng sẽ nhận được <Text style={styles.highLight}>+1 lì xì</Text>
                         . Mỗi người chơi chỉ nhận được <Text style={styles.highLight}>1 lượt chơi 1 ngày</Text></Text>
                 </View>
-            </ImageBackground>
+            </ExpoImage>
         </SafeAreaView>
     )
 }

@@ -12,7 +12,6 @@ import { StyleSheet } from "react-native";
         width: 335,
         height: 600,
         marginTop: 30,
-        flex: 1,
         alignItems: 'center'
     },
     title: {

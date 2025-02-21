@@ -2,18 +2,23 @@ import React, { useEffect, useState } from 'react';
 import styles from "./styles/TimDuocDoiThuStyle";
 import { collection, doc, getFirestore, onSnapshot } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
-import { Image, ImageBackground, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { Image, ImageBackground as ExpoImage } from "expo-image";
 import Header from '../components/Header'
 import ButtonComponent from '../components/ButtonCompont'
 import { SafeAreaView } from 'react-native';
 import { useAuth } from "@/contexts/AuthContext";
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from './Waiting';
+import { RootStackParamList } from './utils/RootStack';
+import { formatTime } from './utils/formatTime';
+import { useNavigation } from 'expo-router';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 interface Page_TimDuocDoiThu {
     imgbg: string
     imgface1: string
     imgface2: string
 }
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'TimDuocDoiThu'>;
 type TimDuocDoiThuRouteProp = RouteProp<RootStackParamList, "TimDuocDoiThu">;
 const db = getFirestore(app)
 const Page_TimDuocDoiThu: React.FC = () => {
@@ -21,7 +26,15 @@ const Page_TimDuocDoiThu: React.FC = () => {
     const { user } = useAuth();
     const [userName, setUserName] = useState<string>()
     const route = useRoute<TimDuocDoiThuRouteProp>();
-    const { opponentName } = route.params; 
+    const { opponentName } = route.params;
+    const [timeElapsed, setTimeElapsed] = useState(15);
+    const navigation = useNavigation<NavigationProp>()
+    const buttonHuy = () => {
+        navigation.navigate('ThanhLiXi')
+    }
+    const buttonChoi = () => {
+        navigation.navigate('CauDo')
+    }
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_TimDuocDoiThu"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -62,12 +75,24 @@ const Page_TimDuocDoiThu: React.FC = () => {
             return () => unsubscribe();
         }
     }, [user]);
+    //thoi gian vao tran
+    useEffect(() => {
+        if (timeElapsed > 0) {
+            const timer = setInterval(() => {
+                setTimeElapsed(prevTime => prevTime - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        } else {
+            navigation.navigate('CauDo')
+        }
+    }, [timeElapsed]);
     return (
 
-        <ImageBackground
+        <ExpoImage
             source={{ uri: page_timduocdoithu?.imgbg }}
             style={styles.banner}
-            resizeMode='cover'
+            contentFit="cover"
+            cachePolicy="memory-disk"
         >
             <Header
                 title='Thánh lì xì'
@@ -82,9 +107,10 @@ const Page_TimDuocDoiThu: React.FC = () => {
                 <View
                     style={styles.avt1Container}
                 >
-                    <Image source={{ uri: page_timduocdoithu?.imgface1 }}
+                    <ExpoImage source={{ uri: page_timduocdoithu?.imgface1 }}
                         style={styles.face}
-                        resizeMode='cover'
+                        contentFit="cover"
+                        cachePolicy="memory-disk"
                     />
                     <Text
                         style={styles.username}
@@ -94,28 +120,33 @@ const Page_TimDuocDoiThu: React.FC = () => {
                 <View
                     style={styles.avt2Container}
                 >
-                    <Image source={{ uri: page_timduocdoithu?.imgface2 }}
+                    <ExpoImage source={{ uri: page_timduocdoithu?.imgface2 }}
                         style={styles.face}
-                        resizeMode='cover'
+                        contentFit="cover"
+                        cachePolicy="memory-disk"
                     />
                     <Text
                         style={styles.username2}
                     >{opponentName}</Text>
                 </View>
+                {/* Time */}
+                <View style={styles.timeContainer}>
+                    <Text style={styles.time}>{formatTime(timeElapsed)}</Text>
+                </View>
                 {/* Button */}
-                <View style ={styles.button}>
+                <View style={styles.button}>
                     <ButtonComponent
-                    title='Chơi'
-                    onPress={() =>{}}
+                        title='Chơi'
+                        onPress={buttonChoi}
                     />
                     <ButtonComponent
-                    title='Hủy'
-                    buttonStyle = {{backgroundColor: '#faecb6'}}
-                    onPress={() =>{}}
+                        title='Hủy'
+                        buttonStyle={{ backgroundColor: '#faecb6' }}
+                        onPress={buttonHuy}
                     />
                 </View>
             </SafeAreaView>
-        </ImageBackground>
+        </ExpoImage>
     )
 }
 

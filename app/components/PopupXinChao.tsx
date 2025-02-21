@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Image, } from "react-native";
+import { View } from "react-native";
+import { Image, ImageBackground as ExpoImage } from "expo-image";
 import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import ButtonComponent from "./ButtonCompont";
 import { useRouter } from "expo-router";
-import styles  from './stylesComponent/PopupStyles';
+import styles from './stylesComponent/PopupStyles';
 interface Page_Popup {
     img: string;
 }
@@ -42,7 +43,8 @@ const PopupXinChao: React.FC = () => {
     return (
         <View style={styles.overlay}>
             <View style={styles.container}>
-                <Image source={{ uri: page_Popup?.img }} style={styles.img} />
+                <ExpoImage source={{ uri: page_Popup?.img }} style={styles.img} contentFit="cover"
+                    cachePolicy="memory-disk" />
                 <ButtonComponent
                     title="Tôi vẫn khỏe"
                     onPress={goNext}

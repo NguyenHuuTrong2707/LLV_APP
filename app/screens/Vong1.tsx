@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import  styles  from "./styles/Vong1Style";
+import styles from "./styles/Vong1Style";
 import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
-import { ImageBackground, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { ImageBackground as ExpoImage } from "expo-image";
 import Header from '../components/Header'
 import ButtonComponent from '../components/ButtonCompont'
 import { SafeAreaView } from 'react-native';
@@ -12,9 +13,9 @@ interface Page_Vong1 {
     imgbg: string
 }
 type RootStackParamList = {
-    Vong1: undefined; 
-    ThanhLiXi : undefined;
-  };
+    Vong1: undefined;
+    ThanhLiXi: undefined;
+};
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Vong1'>;
 const db = getFirestore(app)
 const Page_Vong1: React.FC = () => {
@@ -44,10 +45,11 @@ const Page_Vong1: React.FC = () => {
     }, []);
     return (
 
-        <ImageBackground
+        <ExpoImage
             source={{ uri: page_vong1?.imgbg }}
             style={styles.banner}
-            resizeMode='cover'
+            contentFit="cover"
+            cachePolicy="memory-disk"
         >
             {/* Thành phần bên trong */}
             <SafeAreaView style={styles.container}>
@@ -70,7 +72,7 @@ const Page_Vong1: React.FC = () => {
                     />
                 </View>
             </SafeAreaView>
-        </ImageBackground>
+        </ExpoImage>
     )
 }
 

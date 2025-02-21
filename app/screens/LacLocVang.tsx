@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Alert, ImageBackground, ScrollView } from "react-native";
+import { Text, View } from "react-native";
+import { ImageBackground as ExpoImage } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles  from "./styles/LacLocVangStyle";
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
@@ -98,7 +99,8 @@ const Page_LacLocVang: React.FC = () => {
     return () => unsubscribe();
   }, [user]);
   return (
-    <ImageBackground source={{ uri: page_LacLocVang?.imgBackGround }} style={styles.imgBackGround} resizeMode="cover">
+    <ExpoImage source={{ uri: page_LacLocVang?.imgBackGround }} style={styles.imgBackGround}  contentFit="cover"
+    cachePolicy="memory-disk">
       <SafeAreaView style={styles.container}>
         <Header />
 
@@ -172,7 +174,7 @@ const Page_LacLocVang: React.FC = () => {
           />
         )}
       </SafeAreaView>
-    </ImageBackground>
+    </ExpoImage>
   );
 };
 

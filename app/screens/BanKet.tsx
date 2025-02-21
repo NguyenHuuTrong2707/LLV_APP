@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import styles  from '../screens/styles/BanKetStyle'
+import styles from '../screens/styles/BanKetStyle'
 import { collection, getFirestore, onSnapshot } from 'firebase/firestore'
 import { app } from '../../firebase/firebaseConfig';
-import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native'
+import { ImageBackground, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground as ExpoImage } from "expo-image";
 import Header from '../components/Header'
 import { SafeAreaView } from 'react-native'
 import { useNavigation } from 'expo-router';
@@ -10,9 +11,9 @@ import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/n
 //Khai bao kieu cho navigation
 type RootStackParamList = {
     BanKetScreen: undefined;
-    Vong1: undefined; 
-  };
-  type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'BanKetScreen'>;
+    Vong1: undefined;
+};
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'BanKetScreen'>;
 interface Page_BanKet {
     contentChungKet: string
     contentGiaiBa: string
@@ -32,11 +33,11 @@ interface Page_BanKet {
 const db = getFirestore(app)
 const Page_BanKet: React.FC = () => {
     const [page_BanKet, setPage_BanKet] = useState<Page_BanKet | null>(null)
-   const navigation = useNavigation<NavigationProp>(); 
-//    Chuyển sang vòng 1 
-const goToVong1 = () => {
-    navigation.navigate("Vong1"); 
-  };
+    const navigation = useNavigation<NavigationProp>();
+    //    Chuyển sang vòng 1 
+    const goToVong1 = () => {
+        navigation.navigate("Vong1");
+    };
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_BanKet"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -69,9 +70,10 @@ const goToVong1 = () => {
         return () => unsubscribe();
     }, []);
     return (
-        <ImageBackground
+        <ExpoImage
             source={{ uri: page_BanKet?.imgBackGround }}
-            resizeMode='cover'
+            contentFit="cover"
+            cachePolicy="memory-disk"
             style={styles.background}
         >
             <SafeAreaView
@@ -82,13 +84,14 @@ const goToVong1 = () => {
                     imageHelp={require('../../assets/images/buttonHelp.png')}
                 />
                 {/* Banner */}
-                <ImageBackground
+                <ExpoImage
                     source={{ uri: page_BanKet?.imgBanner }}
                     style={styles.bannerContainer}
-                    resizeMode='cover'
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
                 >
                     {/* Title */}
-                    <Text style = {styles.title}>GIÁ TRỊ GIẢI THƯỞNG KỲ CHUNG KẾT</Text>
+                    <Text style={styles.title}>GIÁ TRỊ GIẢI THƯỞNG KỲ CHUNG KẾT</Text>
                     {/* Giai nhi */}
                     <Text style={styles.titleGiaiNhi}>
                         01 Giải Nhì
@@ -121,20 +124,20 @@ const goToVong1 = () => {
                     </Text>
                     {/* Vong 1 */}
                     <View style={styles.vong1Container}>
-                    <TouchableOpacity
-                    onPress={goToVong1}
-                    >
-                        <Image source={{ uri: page_BanKet?.imgVong1 }}
-                            style={styles.imgVong1}
-                        />
-                        <Text
-                            style={styles.txtVong}
+                        <TouchableOpacity
+                            onPress={goToVong1}
                         >
-                            {page_BanKet?.contentVong1}
-                        </Text>
-                    </TouchableOpacity>
+                            <Image source={{ uri: page_BanKet?.imgVong1 }}
+                                style={styles.imgVong1}
+                            />
+                            <Text
+                                style={styles.txtVong}
+                            >
+                                {page_BanKet?.contentVong1}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                   
+
                     {/* Vong 2 */}
                     <View style={styles.vong2Container}>
                         <Image source={{ uri: page_BanKet?.imgVong2 }}
@@ -157,9 +160,9 @@ const goToVong1 = () => {
                             {page_BanKet?.contentChungKet}
                         </Text>
                     </View>
-                </ImageBackground>
+                </ExpoImage>
             </SafeAreaView>
-        </ImageBackground>
+        </ExpoImage>
 
     )
 }

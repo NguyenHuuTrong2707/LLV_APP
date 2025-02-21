@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import  styles  from "./styles/HuongDanStyle";
+import styles from "./styles/HuongDanStyle";
 import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
-import { Image, ImageBackground, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { Image, ImageBackground as ExpoImage } from "expo-image";
 import Header from '../components/Header'
 import ButtonComponent from '../components/ButtonCompont'
 import { SafeAreaView } from 'react-native';
@@ -17,7 +18,7 @@ const db = getFirestore(app)
 const Page_HuongDan: React.FC = () => {
     const [page_huongDan, setPageHuongDan] = useState<Page_HuongDan | null>(null)
     const route = useRouter()
-  
+
     const goNext = () => {
         route.push('/home')
     }
@@ -45,10 +46,13 @@ const Page_HuongDan: React.FC = () => {
     }, []);
     return (
 
-        <ImageBackground
-            source={{ uri: page_huongDan?.imgbanner }}
+        <ExpoImage
+            source={{
+                uri: page_huongDan?.imgbanner,
+            }}
             style={styles.banner}
-            resizeMode='cover'
+            contentFit="cover"
+            cachePolicy="memory-disk"
         >
             {/* Thành phần bên trong */}
             <SafeAreaView style={styles.container}>
@@ -59,14 +63,16 @@ const Page_HuongDan: React.FC = () => {
                 <View style={styles.imgContainer}>
                     <Image
                         source={{ uri: page_huongDan?.img1 }}
-                        resizeMode="cover"
+                        contentFit="cover"
+                        cachePolicy="memory-disk"
                         style={styles.img1}
                     />
                 </View>
                 {/* Content */}
-                <ImageBackground
+                <ExpoImage
                     source={{ uri: page_huongDan?.img2 }}
-                    resizeMode="cover"
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
                     style={styles.img2}
                 >
                     {/* Content */}
@@ -75,14 +81,14 @@ const Page_HuongDan: React.FC = () => {
                             {page_huongDan?.content}
                         </Text>
                     </View>
-                </ImageBackground>
+                </ExpoImage>
                 {/* Button */}
                 <ButtonComponent
                     title='Tham gia ngay'
                     onPress={goNext}
                 />
             </SafeAreaView>
-        </ImageBackground>
+        </ExpoImage>
     )
 }
 

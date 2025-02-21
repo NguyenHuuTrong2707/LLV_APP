@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, Text, View, TouchableOpacity } from 'react-native';
+import { FlatList, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { Image, ImageBackground as ExpoImage } from "expo-image";
 import  styles  from './styles/KhoLocStyle'
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image } from 'react-native';
+
 import { useAuth } from "@/contexts/AuthContext";
 interface Page_KhoLoc {
     imgBackGround: string
@@ -115,9 +116,10 @@ const Page_KhoLoc: React.FC = () => {
         return true;
     });
     return (
-        <ImageBackground
+        <ExpoImage
             source={{ uri: page_KhoLoc?.imgBackGround }}
-            resizeMode='cover'
+         contentFit="cover"
+            cachePolicy="memory-disk"
             style={styles.imgBackGround}
         >
 
@@ -143,9 +145,10 @@ const Page_KhoLoc: React.FC = () => {
                     ))}
                 </View>
                 {/* Frame */}
-                <ImageBackground
+                <ExpoImage
                     source={{ uri: page_KhoLoc?.imgFrame }}
-                    resizeMode='cover'
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
                     style={styles.frame}
                 >
                     <FlatList
@@ -217,9 +220,9 @@ const Page_KhoLoc: React.FC = () => {
                             Tổng số quà chưa nhận thưởng là: <Text style={{ color: '#c2030b', fontSize: 18 }}>{tongQuaChuaNhan}</Text>
                         </Text>
                     )}
-                </ImageBackground>
+                </ExpoImage>
             </SafeAreaView>
-        </ImageBackground>
+        </ExpoImage>
 
     )
 }

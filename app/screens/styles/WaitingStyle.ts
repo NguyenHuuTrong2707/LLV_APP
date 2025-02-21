@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     },
     containerUsername:{
         position: 'absolute',
-        top: height * 0.46,  
+        top: Platform.OS === "ios" ? height * 0.48 : height * 0.46 ,  
     },
     txtTime: {
         fontSize: 24,

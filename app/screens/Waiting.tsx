@@ -2,39 +2,31 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styles from "./styles/WaitingStyle";
 import { collection, getFirestore, onSnapshot, doc, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
-import { Image, ImageBackground, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { ImageBackground as ExpoImage } from "expo-image";
 import Header from '../components/Header'
 import { SafeAreaView } from 'react-native';
 import { useAuth } from "@/contexts/AuthContext";
-import { getDistance } from './utils/location';
-import { getUserLocation } from './utils/getLocation';
+import { findDoiThu } from './utils/findPlayer';
 import { Alert } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import { formatTime } from './utils/formatTime';
+import { RootStackParamList } from './utils/RootStack';
 interface Page_Waiting {
     imgbg: string
     imgface1: string
     imgnote: string
     title: string
 }
-type Player = {
-    uid: string,
-    username: string,
-    latitude: number,
-    longitude: number
-}
-export type RootStackParamList = {
-    Waiting : undefined;
-    ThanhLiXi : undefined;
-    TimDuocDoiThu: { opponentName: string };
-  };
+
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Waiting'>;
 const db = getFirestore(app)
 const Page_Waiting: React.FC = () => {
     const [page_waiting, setPageWating] = useState<Page_Waiting | null>(null)
     const { user } = useAuth();
     const [userName, setUserName] = useState<string>('Anonymous')
-    const [timeElapsed, setTimeElapsed] = useState(60);
+    const [timeElapsed, setTimeElapsed] = useState(15);
     const [isSearching, setIsSearching] = useState(true);
     const userRef = user?.uid ? doc(db, "players", user.uid) : null;
     const [opponentFound, setOpponentFound] = useState(false);
@@ -100,7 +92,7 @@ const Page_Waiting: React.FC = () => {
             }, 1000);
             return () => clearInterval(timer);
         }
-        
+
     }, [timeElapsed, isSearching]);
     //Thong bao khi không tim thay doi thu
     useEffect(() => {
@@ -113,70 +105,23 @@ const Page_Waiting: React.FC = () => {
             setIsSearching(false);
         }
     }, [timeElapsed, opponentFound, navigation]);
-    
+    //tim kiem doi thu 
     useEffect(() => {
         if (!isSearching || opponentFound) return;
         const playersRef = collection(db, "players");
         const q = query(playersRef, where("isWaiting", "==", true));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             if (!querySnapshot.empty) {
-                findDoiThu();
+                findDoiThu(user?.uid, setOpponentFound, setIsSearching, navigation);
             }
         });
         return () => unsubscribe();
     }, [isSearching, opponentFound]);
-    //tim doi thu
-    const findDoiThu = async () => {
-        if (!isSearching || opponentFound) return;
-        const location = await getUserLocation();
-        if (!location) {
-            console.log("Không lấy được vị trí.");
-            return;
-        }
-        const playersRef = collection(db, "players");
-        const q = query(playersRef, where("isWaiting", "==", true));
-        const querySnapshot = await getDocs(q);
-        const filteredPlayers = querySnapshot.docs
-            .map(doc => doc.data() as Player)
-            .filter(player => player.uid !== user?.uid);
-        let closestPlayer: Player | null = null;
-        let minDistance = Infinity;
-        filteredPlayers.forEach(player => {
-            const distance = getDistance(
-                location.latitude, location.longitude,
-                player.latitude, player.longitude
-            );
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestPlayer = player;
-            }
-        });
-        if (closestPlayer) {
-            // Alert.alert("Tìm thấy đối thủ:", (closestPlayer as Player).username);
-            setOpponentFound(true);
-            setIsSearching(false);
-
-            // Cập nhật trạng thái của cả hai người chơi để không bị ghép lại lần nữa
-            if (userRef) {
-                await updateDoc(userRef, { isWaiting: false });
-            }
-            const opponentRef = doc(db, "players", (closestPlayer as Player).uid);
-            await updateDoc(opponentRef, { isWaiting: false });
-            navigation.navigate('TimDuocDoiThu', { opponentName: (closestPlayer as Player).username });
-        } else {
-            console.log("Không tìm thấy đối thủ.");
-        }
-    }
-    //dinh dạng thời gian
-    const formatTime = (seconds: number) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-    };
     return (
-        <ImageBackground style={styles.imgbg}
+        <ExpoImage style={styles.imgbg}
             source={{ uri: page_waiting?.imgbg }}
-            resizeMode='cover'
+            contentFit="cover"
+            cachePolicy="memory-disk"
         >
             <SafeAreaView style={styles.container}>
                 <Header
@@ -186,27 +131,29 @@ const Page_Waiting: React.FC = () => {
                 {/* Load  */}
                 <Text style={styles.txtLoad}>Đang tìm đối thủ</Text>
                 {/* Avatar */}
-                <Image style={styles.avt}
+                <ExpoImage style={styles.avt}
                     source={{ uri: page_waiting?.imgface1 }}
-                    resizeMode='cover'
-                ></Image>
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
+                ></ExpoImage>
                 {/* Ten user */}
-                <View style = {styles.containerUsername}>
-                <Text style={styles.txtUserName}>{userName}</Text>
+                <View style={styles.containerUsername}>
+                    <Text style={styles.txtUserName}>{userName}</Text>
                 </View>
                 {/* Thoi gian */}
-                <View style ={styles.containerTime}>
+                <View style={styles.containerTime}>
 
-                <Text style={styles.txtTime}>{formatTime(timeElapsed)}</Text>
+                    <Text style={styles.txtTime}>{formatTime(timeElapsed)}</Text>
                 </View>
                 {/* Note */}
-                <Image
+                <ExpoImage
                     source={{ uri: page_waiting?.imgnote }}
                     style={styles.note}
-                    resizeMode='cover'
-                ></Image>
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
+                ></ExpoImage>
             </SafeAreaView>
-        </ImageBackground>
+        </ExpoImage>
     )
 }
 
