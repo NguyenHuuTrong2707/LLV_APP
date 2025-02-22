@@ -10,6 +10,9 @@ export type Player = {
   username: string;
   latitude: number;
   longitude: number;
+  correctAnswers: number;
+  totalTime: number;
+  isFinished : boolean
 };
 
 export const findDoiThu = async (
