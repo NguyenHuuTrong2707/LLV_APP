@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, updateDoc, doc, getFirestore } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { getDistance } from "./location";
 import { getUserLocation } from "./getLocation";
 import { app } from "@/firebase/firebaseConfig";
@@ -12,9 +12,9 @@ export type Player = {
   longitude: number;
   correctAnswers: number;
   totalTime: number;
-  isFinished : boolean
+  isFinished: boolean
 };
-
+const db = getFirestore(app);
 export const findDoiThu = async (
   userId: string | undefined,
   setOpponentFound: (value: boolean) => void,
@@ -22,8 +22,8 @@ export const findDoiThu = async (
   navigation: NativeStackNavigationProp<RootStackParamList, 'Waiting'>
 ) => {
   if (!userId) return;
-  
-  const db = getFirestore(app);
+
+
   const userRef = doc(db, "players", userId);
   const location = await getUserLocation();
 
@@ -35,11 +35,11 @@ export const findDoiThu = async (
   const playersRef = collection(db, "players");
   const q = query(playersRef, where("isWaiting", "==", true));
   const querySnapshot = await getDocs(q);
-  
+
   const filteredPlayers = querySnapshot.docs
     .map(doc => doc.data() as Player)
     .filter(player => player.uid !== userId);
-  
+
   let closestPlayer: Player | null = null;
   let minDistance = Infinity;
 
@@ -67,3 +67,4 @@ export const findDoiThu = async (
     console.log("Không tìm thấy đối thủ.");
   }
 };
+

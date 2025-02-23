@@ -9,7 +9,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { collection, query, limit, onSnapshot, getFirestore } from 'firebase/firestore';
 import { app } from '@/firebase/firebaseConfig';
 import { saveResult, listenForOpponentFinish, determineWinner } from './utils/gameLogic';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import { RootStackParamList } from './utils/RootStack';
+import { useNavigation } from 'expo-router';
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'CauDo'>;
 const db = getFirestore(app);
 
 const Page_CauDo: React.FC = () => {
@@ -20,11 +24,12 @@ const Page_CauDo: React.FC = () => {
     const [totalTime, setTotalTime] = useState(0);
     const [isComplete, setIsComplete] = useState(false);
     const [correctAnswers, setCorrectAnswers] = useState(0);
-
+    const navigation = useNavigation<NavigationProp>();
     const currentQuestion = questions[currentQuestionIndex] || { cauhoi: "", cautraloi: [], caudung: "" };
 
     useEffect(() => {
         const q = query(collection(db, "Questions"), limit(5));
+        
         const unsubscribe = onSnapshot(q, (snapshot) => {
             if (!snapshot.empty) {
                 setQuestions(snapshot.docs.map(doc => doc.data()) as { cauhoi: string, cautraloi: string[], caudung: string }[]);
@@ -64,7 +69,7 @@ const Page_CauDo: React.FC = () => {
         } else {
             setIsComplete(true);
             await saveResult(user, totalTime, updatedCorrectAnswers, () => {
-                listenForOpponentFinish((players) => determineWinner(players, user));
+                listenForOpponentFinish((players) => determineWinner(players, user, navigation));
             });
         }
     };

@@ -76,6 +76,21 @@ const styles = StyleSheet.create({
         lineHeight: 30,
         textAlign: 'center',
         color: '#F5D77F'
-    }
+    },
+    loadingContainer: {
+        position: "absolute",
+        top: 300,
+        backgroundColor: "#000",
+        padding: 20,
+        borderRadius: 10,
+    },
+    
+    loadingText: {
+        marginTop: 10,
+        fontSize: 18,
+        color: "#FFF",
+        fontWeight: "bold",
+    },
+    
 });
 export default styles

@@ -2,7 +2,6 @@ import { Alert } from 'react-native';
 import { Player } from './findPlayer';
 import { collection, doc, onSnapshot, updateDoc, getFirestore } from 'firebase/firestore';
 import { app } from '@/firebase/firebaseConfig';
-
 const db = getFirestore(app);
 
 export const saveResult = async (user: any, totalTime: number, finalCorrectAnswers: number, listenForOpponentFinish: () => void) => {
@@ -34,7 +33,7 @@ export const listenForOpponentFinish = (onFinish: (players: Player[]) => void) =
     });
 };
 
-export const determineWinner = (players: Player[], user: any) => {
+export const determineWinner = (players: Player[], user: any, navigation: any) => {
     const allZeroCorrect = players.every(player => player.correctAnswers === 0);
     
     if (allZeroCorrect) {
@@ -62,7 +61,9 @@ export const determineWinner = (players: Player[], user: any) => {
     
     const winner = players[0];
     if (user?.uid === winner.uid) {
-        Alert.alert("Bạn đã thắng!", `Bạn có ${winner.correctAnswers} câu đúng, hoàn thành trong ${winner.totalTime} giây! 🏆`);
+        navigation.navigate("Winner", {
+            correctAnswers: winner.correctAnswers,
+        });
     } else {
         Alert.alert("Bạn đã thua!", `Người thắng là ${winner.username} với ${winner.correctAnswers} câu đúng, hoàn thành trong ${winner.totalTime} giây.`);
     }

@@ -3,4 +3,5 @@ export type RootStackParamList = {
     ThanhLiXi : undefined;
     CauDo : undefined
     TimDuocDoiThu: { opponentName: string };
+    Winner: { correctAnswers: number}
   };

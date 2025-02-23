@@ -21,6 +21,14 @@ import { StyleSheet } from "react-native";
         color: '#FFF',
         fontFamily: 'SVN-Gotham',
         fontWeight: 700
+    },
+    totalLixi:{
+        paddingVertical: 10,
+        fontSize : 24,
+        lineHeight:24,
+        color: '#ffe933',
+        fontFamily: 'SVN-Gotham',
+        fontWeight: 700
     }
 });
 export default styles

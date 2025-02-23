@@ -6,6 +6,7 @@ import Page_ThanhLiXi from "../screens/ThanhLiXi";
 import Page_Waiting from "../screens/Waiting";
 import Page_TimDuocDoiThu from "../screens/TimDuocDoiThu";
 import Page_CauDo from "../screens/CauDo";
+import Page_Winner from "../screens/Winner";
 const Stack = createNativeStackNavigator();
 
 export default function BanKetStack() {
@@ -17,6 +18,7 @@ export default function BanKetStack() {
       <Stack.Screen name="Wating" component={Page_Waiting} />
       <Stack.Screen name="TimDuocDoiThu" component={Page_TimDuocDoiThu} />
       <Stack.Screen name="CauDo" component={Page_CauDo} />
+      <Stack.Screen name="Winner" component={Page_Winner} />
     </Stack.Navigator>
   );
 }
