@@ -52,7 +52,7 @@ const Page_Vong1: React.FC = () => {
         const fetchTotalLixi = async () => {
             if (!user?.uid) return;
             try {
-                const playerRef = doc(db, "players", user.uid);
+                const playerRef = doc(db, "users", user.uid);
                 const playerSnap = await getDoc(playerRef);
 
                 if (playerSnap.exists()) {

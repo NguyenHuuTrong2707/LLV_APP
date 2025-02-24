@@ -29,7 +29,7 @@ const Page_Winner: React.FC = () => {
     const nhanLoc = async () => {
         if (!user.uid) return
         try {
-            const playerRef = doc(db, 'players', user.uid)
+            const playerRef = doc(db, 'users', user.uid)
             const playerSnap = await getDoc(playerRef)
             if (playerSnap.exists()) {
                 const playerData = playerSnap.data()
