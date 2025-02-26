@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/n
 type RootStackParamList = {
     BanKetScreen: undefined;
     Vong1: undefined;
+    Vong2: undefined
 };
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'BanKetScreen'>;
 interface Page_BanKet {
@@ -38,6 +39,10 @@ const Page_BanKet: React.FC = () => {
     const goToVong1 = () => {
         navigation.navigate("Vong1");
     };
+    //chuyen sang vong 2
+    const goToVong2 = () => {
+        navigation.navigate('Vong2')
+    }
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_BanKet"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -140,14 +145,18 @@ const Page_BanKet: React.FC = () => {
 
                     {/* Vong 2 */}
                     <View style={styles.vong2Container}>
-                        <Image source={{ uri: page_BanKet?.imgVong2 }}
-                            style={styles.imgVong2}
-                        />
-                        <Text
-                            style={styles.txtVong}
+                        <TouchableOpacity
+                            onPress={goToVong2}
                         >
-                            {page_BanKet?.contentVong2}
-                        </Text>
+                            <Image source={{ uri: page_BanKet?.imgVong2 }}
+                                style={styles.imgVong2}
+                            />
+                            <Text
+                                style={styles.txtVong}
+                            >
+                                {page_BanKet?.contentVong2}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                     {/* Chung ket */}
                     <View style={styles.chungKetContainer}>

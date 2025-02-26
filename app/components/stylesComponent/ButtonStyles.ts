@@ -16,7 +16,16 @@ import { StyleSheet } from "react-native";
         color: '#c2030b',
         fontWeight: 'bold',
         fontFamily: 'SVN-Cookies',
-        fontSize: 16
+        fontSize: 16,
+        marginBottom: 5
+    },
+    contentTitle:{
+        textAlign: 'center',
+        color: '#c2030b',
+        fontFamily: 'SVN-Cookies',
+        fontSize: 12,
+        position: 'absolute',
+        bottom: -1
     },
     gradient: {
         flex: 1,

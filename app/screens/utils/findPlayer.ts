@@ -19,7 +19,8 @@ export const findDoiThu = async (
   userId: string | undefined,
   setOpponentFound: (value: boolean) => void,
   setIsSearching: (value: boolean) => void,
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Waiting'>
+  nextScreen: keyof RootStackParamList,
+  navigation: NativeStackNavigationProp<RootStackParamList, any>
 ) => {
   if (!userId) return;
 
@@ -61,9 +62,13 @@ export const findDoiThu = async (
     await updateDoc(userRef, { isWaiting: false });
     const opponentRef = doc(db, "players", (closestPlayer as Player).uid);
     await updateDoc(opponentRef, { isWaiting: false });
-
-    navigation.navigate('TimDuocDoiThu', { opponentName: (closestPlayer as Player).username });
-  } else {
+ if(nextScreen === 'TimDuocDoiThu'){
+    navigation.navigate(nextScreen, { opponentName: (closestPlayer as Player).username });
+  }
+  else{
+    navigation.navigate(nextScreen as any);
+  }
+ } else {
     console.log("Không tìm thấy đối thủ.");
   }
 };

@@ -4,4 +4,6 @@ export type RootStackParamList = {
     CauDo : undefined
     TimDuocDoiThu: { opponentName: string };
     Winner: { correctAnswers: number}
+    BanVit: undefined,
+    ThuTaiBanVit: { opponentName: string }
   };

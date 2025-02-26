@@ -112,7 +112,7 @@ const Page_Waiting: React.FC = () => {
         const q = query(playersRef, where("isWaiting", "==", true));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             if (!querySnapshot.empty) {
-                findDoiThu(user?.uid, setOpponentFound, setIsSearching, navigation);
+                findDoiThu(user?.uid, setOpponentFound, setIsSearching,"TimDuocDoiThu", navigation);
             }
         });
         return () => unsubscribe();

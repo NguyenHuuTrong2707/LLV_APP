@@ -51,7 +51,6 @@ const Page_ThanhLiXi: React.FC = () => {
             timestamp: new Date()
         });
         navigation.navigate('Wating')
-
     }
 
 
