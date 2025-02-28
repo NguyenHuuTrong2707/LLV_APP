@@ -32,17 +32,56 @@ type ThuTaiBanViRouteProp = RouteProp<RootStackParamList, "ThuTaiBanVit">;
 const db = getFirestore(app);
 
 const Page_ThuTaiBanVit: React.FC = () => {
-    const [page_thutaibanvit, setPageThuTaiBanVit] = useState<Page_ThuTaiBanVit | null>(null);
+    const [pageData, setPageData] = useState<any>(null);
     const navigation = useNavigation<NavigationProp>();
     const { user } = useAuth();
     const route = useRoute<ThuTaiBanViRouteProp>();
-    const { opponentName } = route.params;
+    const { opponentName, gameMode } = route.params;
     const [userName, setUserName] = useState<string>("Anonymous");
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
-    const [timeLeft, setTimeLeft] = useState(10);
+    const [timeLeft, setTimeLeft] = useState(6000);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    
+    //hiển thị hình ảnh khi nhấn vào máy khoan
+    const banVitImages = [
+        {
+            id: 1,
+            uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit_ceg78b.png",
+            position: { top: -80, left: 80 },
+            width: 81,
+            height: 78
+        },
+        {
+            id: 2,
+            uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit1_lwio12.png",
+            position: { top: -30, left: 50 },
+            width: 63,
+            height: 62
+        },
+        {
+            id: 3,
+            uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit2_jtzmsb.png",
+            position: { top: -30, left: 200 },
+            width: 66,
+            height: 58
+        },
+    ];
+    const anhKimImages = [
+        { id: 1, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim_nfvjpc.png", position: { top: 150, left: 50 }, width: 84, height: 60 },
+        { id: 2, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim1_jwebxs.png", position: { top: 250, left: 120 }, width: 69, height: 46 },
+        { id: 3, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762327/anhkim2_hqchx8.png", position: { top: 150, left: 180 }, width: 70, height: 46 },
+    ];
+    const [images, setImages] = useState(banVitImages);
+    //set trạng thai ảnh
+    useEffect(() => {
+        if (gameMode === 'AnhKim') {
+            setImages(anhKimImages);
+        } else {
+            setImages(banVitImages);
+        }
+    }, [gameMode]);
+    // Trạng thái kiểm soát hình nào đang hiển thị
+    const [visibleImageId, setVisibleImageId] = useState<number | null>(null);
     //xac dinh nguoi thang
     useEffect(() => {
         if (timeLeft > 0) {
@@ -57,14 +96,14 @@ const Page_ThuTaiBanVit: React.FC = () => {
             } else if (userScore < opponentScore) {
                 winnerMessage = `🏆 Người chiến thắng: ${opponentName}`;
             }
-            
+
             Alert.alert("Kết thúc!", winnerMessage, [
-                { text: "OK", onPress: () => navigation.navigate("BanVit") }
+                { text: "OK", onPress: () => navigation.navigate("BanVit", { gameMode: 'ThuTaiBanVit | AnhKim' }) }
             ]);
         }
         return () => clearTimeout(timerRef.current!);
     }, [timeLeft]);
-    
+
     useEffect(() => {
         if (!user?.uid) return;
         const userRef = doc(db, "users", user.uid);
@@ -103,11 +142,13 @@ const Page_ThuTaiBanVit: React.FC = () => {
 
     useEffect(() => { resetScores(); }, [user, opponentName]);
 
-    const handleTapKhoan = async () => {
+    const handleTapScreen = async () => {
         if (!user?.uid) return;
         const userDocRef = doc(db, "users", user.uid);
         try {
             await updateDoc(userDocRef, { score: userScore + 1 });
+            const randomIndex = Math.floor(Math.random() * images.length);
+            setVisibleImageId(images[randomIndex].id);
         } catch (error) {
             console.error("Lỗi khi cập nhật điểm số:", error);
         }
@@ -124,29 +165,17 @@ const Page_ThuTaiBanVit: React.FC = () => {
         return () => unsubscribe();
     }, [user]);
     useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, "GameBanVit"), (querySnapshot) => {
-            if (!querySnapshot.empty) {
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    setPageThuTaiBanVit({
-                        face1: data.face1,
-                        face2: data.face2,
-                        imgKhoan: data.imgKhoan,
-                        imgPlayer1: data.imgPlayer1,
-                        imgPlayer2: data.imgPlayer2,
-                        imgVs: data.imgVs,
-                        imgbanner: data.imgbanner,
-                        imgbg: data.imgbg,
-                        khungTime: data.khungTime
-                    })
-                });
+        const unsubscribe = onSnapshot(collection(db, `Game${gameMode}`), (snapshot) => {
+            if (!snapshot.empty) {
+                setPageData(snapshot.docs[0].data());
+            } else {
+                console.log(`Không có dữ liệu trong collection Game${gameMode}`);
             }
         });
-        return () => unsubscribe();
-    }, []);
+    })
     return (
         <ExpoImage
-            source={{ uri: page_thutaibanvit?.imgbg }}
+            source={{ uri: pageData?.imgbg }}
             style={styles.banner}
             contentFit="cover"
             cachePolicy="memory-disk"
@@ -159,13 +188,13 @@ const Page_ThuTaiBanVit: React.FC = () => {
                 >
                     <View style={styles.user1Container}>
                         <ExpoImage
-                            source={{ uri: page_thutaibanvit?.imgPlayer1 }}
+                            source={{ uri: pageData?.imgPlayer1 }}
                             style={styles.player}
                             contentFit="cover"
                             cachePolicy="memory-disk"
                         >
                             <ExpoImage
-                                source={{ uri: page_thutaibanvit?.face1 }}
+                                source={{ uri: pageData?.face1 }}
                                 style={styles.face1}
                                 contentFit="cover"
                                 cachePolicy="memory-disk"
@@ -183,19 +212,19 @@ const Page_ThuTaiBanVit: React.FC = () => {
 
                     {/* vs */}
                     <ExpoImage
-                        source={{ uri: page_thutaibanvit?.imgVs }}
+                        source={{ uri: pageData?.imgVs }}
                         style={styles.imgVs}
                     >
                     </ExpoImage>
                     <View style={styles.user1Container}>
                         <ExpoImage
-                            source={{ uri: page_thutaibanvit?.imgPlayer2 }}
+                            source={{ uri: pageData?.imgPlayer2 }}
                             style={styles.player}
                             contentFit="cover"
                             cachePolicy="memory-disk"
                         >
                             <ExpoImage
-                                source={{ uri: page_thutaibanvit?.face2 }}
+                                source={{ uri: pageData?.face2 }}
                                 style={styles.face2}
                                 contentFit="cover"
                                 cachePolicy="memory-disk"
@@ -214,14 +243,15 @@ const Page_ThuTaiBanVit: React.FC = () => {
                 <Text style={styles.title}>THỬ TÀI BẮN VÍT</Text>
                 {/* Banner Game */}
                 <ExpoImage
-                    source={{ uri: page_thutaibanvit?.imgbanner }}
+                    source={{ uri: pageData?.imgbanner }}
                     style={styles.bannerGame}
                     contentFit="cover"
                     cachePolicy="memory-disk"
+                    onTouchEnd={handleTapScreen}
                 >
                     {/* Khung time */}
                     <ExpoImage
-                        source={{ uri: page_thutaibanvit?.khungTime }}
+                        source={{ uri: pageData?.khungTime }}
                         style={styles.khungTime}
                         contentFit="cover"
                         cachePolicy="memory-disk"
@@ -230,13 +260,27 @@ const Page_ThuTaiBanVit: React.FC = () => {
                     </ExpoImage>
                     {/* Khoan */}
                     <ExpoImage
-                        source={{ uri: page_thutaibanvit?.imgKhoan }}
+                        source={{ uri: pageData?.imgKhoan }}
                         style={styles.imgKhoan}
                         contentFit="cover"
                         cachePolicy="memory-disk"
-                        onTouchEnd={handleTapKhoan}
+
                     >
-                        <Text style={styles.time}>00:00</Text>
+                        {images.map((image) =>
+                            visibleImageId === image.id ? (
+                                <ExpoImage
+                                    key={image.id}
+                                    source={{ uri: image.uri }}
+                                    style={[
+                                        styles.fixedImage,
+                                        image.position,
+                                        { width: image.width, height: image.height }
+                                    ]}
+                                    contentFit="cover"
+                                    cachePolicy="memory-disk"
+                                />
+                            ) : null
+                        )}
                     </ExpoImage>
                 </ExpoImage>
             </SafeAreaView>

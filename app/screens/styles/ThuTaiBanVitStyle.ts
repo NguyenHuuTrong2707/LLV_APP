@@ -98,6 +98,9 @@ const styles = StyleSheet.create({
         position:'fixed',
         top: 90,
         right: 50
-    }
+    },
+    fixedImage: {
+        position: "absolute",
+    },
 });
 export default styles

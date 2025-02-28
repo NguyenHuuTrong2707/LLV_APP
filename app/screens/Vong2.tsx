@@ -15,18 +15,17 @@ interface Page_Vong2 {
 }
 type RootStackParamList = {
     Vong2: undefined;
-    BanVit: undefined;
+    BanVit: { gameMode: string };
 };
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Vong2'>;
 const db = getFirestore(app)
 const Page_Vong2: React.FC = () => {
     const [page_vong2, setPageVong2] = useState<Page_Vong2 | null>(null)
     const navigation = useNavigation<NavigationProp>()
-    const [totalLixi , setTotalLiXi] = useState<number>(0)
     const {user} = useAuth()
-    const goToBanVit = () => {
-        navigation.navigate('BanVit')
-    }
+    const goToGameScreen = (mode: 'ThuTaiBanVit' | 'AnhKim') => {
+        navigation.navigate('BanVit', { gameMode: mode });
+    };
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "Page_Vong1"), (querySnapshot) => {
             if (querySnapshot.empty) {
@@ -65,7 +64,7 @@ const Page_Vong2: React.FC = () => {
                 >
                     <ButtonComponent
                         title='Thử tài bắn vít'
-                        onPress={goToBanVit}
+                        onPress={() => goToGameScreen('ThuTaiBanVit')}
                         buttonStyle = {{width: '110%'}}
                     />
                     <ButtonComponent
@@ -76,7 +75,7 @@ const Page_Vong2: React.FC = () => {
                     />
                     <ButtonComponent
                         title='Thánh ánh kim'
-                        onPress={() => { }}
+                        onPress={() => goToGameScreen('AnhKim')}
                         buttonStyle = {{width: '110%'}}
                         contentTitle='Ra mắt ngày 08/11'
                     />
