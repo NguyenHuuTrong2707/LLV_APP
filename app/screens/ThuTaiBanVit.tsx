@@ -40,36 +40,36 @@ const Page_ThuTaiBanVit: React.FC = () => {
     const [userName, setUserName] = useState<string>("Anonymous");
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
-    const [timeLeft, setTimeLeft] = useState(6000);
+    const [timeLeft, setTimeLeft] = useState(15);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     //hiển thị hình ảnh khi nhấn vào máy khoan
     const banVitImages = [
         {
             id: 1,
             uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit_ceg78b.png",
-            position: { top: -80, left: 80 },
+            position: { top: 60, left: 100 },
             width: 81,
             height: 78
         },
         {
             id: 2,
             uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit1_lwio12.png",
-            position: { top: -30, left: 50 },
+            position: { top: 130, left: 60 },
             width: 63,
             height: 62
         },
         {
             id: 3,
             uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit2_jtzmsb.png",
-            position: { top: -30, left: 200 },
+            position: { top: 130, left: 210 },
             width: 66,
             height: 58
         },
     ];
     const anhKimImages = [
-        { id: 1, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim_nfvjpc.png", position: { top: 150, left: 50 }, width: 84, height: 60 },
-        { id: 2, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim1_jwebxs.png", position: { top: 250, left: 120 }, width: 69, height: 46 },
-        { id: 3, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762327/anhkim2_hqchx8.png", position: { top: 150, left: 180 }, width: 70, height: 46 },
+        { id: 1, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim_nfvjpc.png", position: { top: 300, left: 50 }, width: 84, height: 60 },
+        { id: 2, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim1_jwebxs.png", position: { top: 350, left: 120 }, width: 69, height: 46 },
+        { id: 3, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762327/anhkim2_hqchx8.png", position: { top: 300, left: 180 }, width: 70, height: 46 },
     ];
     const [images, setImages] = useState(banVitImages);
     //set trạng thai ảnh
@@ -249,6 +249,21 @@ const Page_ThuTaiBanVit: React.FC = () => {
                     cachePolicy="memory-disk"
                     onTouchEnd={handleTapScreen}
                 >
+                     {images.map((image) =>
+                            visibleImageId === image.id ? (
+                                <ExpoImage
+                                    key={image.id}
+                                    source={{ uri: image.uri }}
+                                    style={[
+                                        styles.fixedImage,
+                                        image.position,
+                                        { width: image.width, height: image.height }
+                                    ]}
+                                    contentFit="cover"
+                                    cachePolicy="memory-disk"
+                                />
+                            ) : null
+                        )}
                     {/* Khung time */}
                     <ExpoImage
                         source={{ uri: pageData?.khungTime }}
@@ -266,21 +281,7 @@ const Page_ThuTaiBanVit: React.FC = () => {
                         cachePolicy="memory-disk"
 
                     >
-                        {images.map((image) =>
-                            visibleImageId === image.id ? (
-                                <ExpoImage
-                                    key={image.id}
-                                    source={{ uri: image.uri }}
-                                    style={[
-                                        styles.fixedImage,
-                                        image.position,
-                                        { width: image.width, height: image.height }
-                                    ]}
-                                    contentFit="cover"
-                                    cachePolicy="memory-disk"
-                                />
-                            ) : null
-                        )}
+                       
                     </ExpoImage>
                 </ExpoImage>
             </SafeAreaView>
