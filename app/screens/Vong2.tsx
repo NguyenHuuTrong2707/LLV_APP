@@ -23,7 +23,7 @@ const Page_Vong2: React.FC = () => {
     const [page_vong2, setPageVong2] = useState<Page_Vong2 | null>(null)
     const navigation = useNavigation<NavigationProp>()
     const {user} = useAuth()
-    const goToGameScreen = (mode: 'ThuTaiBanVit' | 'AnhKim') => {
+    const goToGameScreen = (mode: 'ThuTaiBanVit' | 'AnhKim' | 'AnhHung') => {
         navigation.navigate('BanVit', { gameMode: mode });
     };
     useEffect(() => {
@@ -69,7 +69,7 @@ const Page_Vong2: React.FC = () => {
                     />
                     <ButtonComponent
                         title='Anh hùng siêu bảo vệ'
-                        onPress={() => { }}
+                        onPress={() => {goToGameScreen('AnhHung') }}
                         buttonStyle = {{width: '110%'}}
                         contentTitle='Ra mắt ngày 08/11'
                     />

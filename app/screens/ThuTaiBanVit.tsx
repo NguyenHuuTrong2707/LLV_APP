@@ -1,20 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from "./styles/ThuTaiBanVitStyle";
-import { collection, getFirestore, onSnapshot, doc, setDoc, getDoc, updateDoc, query, where, getDocs } from 'firebase/firestore';
+import { collection, getFirestore, onSnapshot, doc, setDoc, getDoc, updateDoc, query, where, getDocs, increment } from 'firebase/firestore';
 import { app } from '../../firebase/firebaseConfig';
 import { Alert, Text, View } from 'react-native';
 import { ImageBackground as ExpoImage } from "expo-image";
 import Header from '../components/Header';
-import ButtonComponent from '../components/ButtonCompont';
 import { SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
-import { useFocusEffect, useNavigation } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import { RootStackParamList } from './utils/RootStack';
 import { useAuth } from '@/contexts/AuthContext';
-import { findDoiThu } from './utils/findPlayer';
-import { getUserLocation } from './utils/getLocation';
 import { RouteProp, useRoute } from '@react-navigation/native';
-
+import { formatTime } from './utils/formatTime';
 interface Page_ThuTaiBanVit {
     face1: string
     face2: string
@@ -40,46 +37,64 @@ const Page_ThuTaiBanVit: React.FC = () => {
     const [userName, setUserName] = useState<string>("Anonymous");
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
-    const [timeLeft, setTimeLeft] = useState(15);
+    const [timeLeft, setTimeLeft] = useState(5);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const [gameStyle, setGameStyle] = useState({});
     //hiển thị hình ảnh khi nhấn vào máy khoan
     const banVitImages = [
         {
             id: 1,
             uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit_ceg78b.png",
-            position: { top: 60, left: 100 },
+            position: { top: -80, left: 100 },
             width: 81,
             height: 78
         },
         {
             id: 2,
             uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit1_lwio12.png",
-            position: { top: 130, left: 60 },
+            position: { top: -50, left: 50 },
             width: 63,
             height: 62
         },
         {
             id: 3,
             uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740747058/dinhvit2_jtzmsb.png",
-            position: { top: 130, left: 210 },
+            position: { top: -50, left: 210 },
             width: 66,
             height: 58
         },
     ];
     const anhKimImages = [
-        { id: 1, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim_nfvjpc.png", position: { top: 300, left: 50 }, width: 84, height: 60 },
-        { id: 2, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim1_jwebxs.png", position: { top: 350, left: 120 }, width: 69, height: 46 },
-        { id: 3, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762327/anhkim2_hqchx8.png", position: { top: 300, left: 180 }, width: 70, height: 46 },
+        { id: 1, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim_nfvjpc.png", position: { top: 130, left: 30 }, width: 84, height: 60 },
+        { id: 2, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762328/anhkim1_jwebxs.png", position: { top: 250, left: 120 }, width: 69, height: 46 },
+        { id: 3, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740762327/anhkim2_hqchx8.png", position: { top: 130, left: 180 }, width: 70, height: 46 },
+    ];
+    const anhHungImages = [
+        { id: 1, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740838325/ion_wunpem.png", position: { top: 420, left: 150 }, width: 56, height: 39 },
+        { id: 2, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740838325/ion_wunpem.png", position: { top: 300, left: 170 }, width: 49, height: 35 },
+        { id: 3, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740838325/ion_wunpem.png", position: { top: 350, left: 200 }, width: 57, height: 46 },
+        { id: 4, uri: "https://res.cloudinary.com/dusseahzm/image/upload/v1740838325/ion_wunpem.png", position: { top: 280, left: 300 }, width: 50, height: 35 }
     ];
     const [images, setImages] = useState(banVitImages);
     //set trạng thai ảnh
     useEffect(() => {
         if (gameMode === 'AnhKim') {
             setImages(anhKimImages);
-        } else {
+        } else if (gameMode === 'ThuTaiBanVit') {
             setImages(banVitImages);
         }
-    }, [gameMode]);
+        else {
+            setImages(anhHungImages)
+            setGameStyle({
+                width: 556,
+                height: 569,
+                position: 'fixed',
+                top: -90,
+                right: -20
+            });
+        }
+    }, [gameMode, userScore]);
+
     // Trạng thái kiểm soát hình nào đang hiển thị
     const [visibleImageId, setVisibleImageId] = useState<number | null>(null);
     //xac dinh nguoi thang
@@ -92,14 +107,27 @@ const Page_ThuTaiBanVit: React.FC = () => {
             clearTimeout(timerRef.current!);
             let winnerMessage = "Trận đấu hòa!";
             if (userScore > opponentScore) {
-                winnerMessage = `🏆 Người chiến thắng: ${userName}`;
+                winnerMessage = `Chúc mừng bạn đã chiến thắng\nNhận lì xì vào túi ngay nhé`;
+                Alert.alert("Kết thúc!", winnerMessage, [
+                    { text: "OK", 
+                        onPress: async () => {
+                            if (user?.uid) {
+                                const userRef = doc(db, "users", user.uid);
+                                await updateDoc(userRef, {
+                                    totalLixi: increment(1) 
+                                });
+                            }
+                            navigation.goBack()
+                        }}
+                ]);
             } else if (userScore < opponentScore) {
-                winnerMessage = `🏆 Người chiến thắng: ${opponentName}`;
+                winnerMessage = `Bạn đã thua\nLần sau cố gắng hơn nhé`;
+                Alert.alert("Kết thúc!", winnerMessage, [
+                    { text: "OK", onPress: () => navigation.goBack() }
+                ]);
             }
 
-            Alert.alert("Kết thúc!", winnerMessage, [
-                { text: "OK", onPress: () => navigation.navigate("BanVit", { gameMode: 'ThuTaiBanVit | AnhKim' }) }
-            ]);
+          
         }
         return () => clearTimeout(timerRef.current!);
     }, [timeLeft]);
@@ -240,16 +268,33 @@ const Page_ThuTaiBanVit: React.FC = () => {
                     </View>
                 </View>
                 {/* Title */}
-                <Text style={styles.title}>THỬ TÀI BẮN VÍT</Text>
+                <Text style={styles.title}>{pageData?.title}</Text>
                 {/* Banner Game */}
                 <ExpoImage
                     source={{ uri: pageData?.imgbanner }}
                     style={styles.bannerGame}
                     contentFit="cover"
                     cachePolicy="memory-disk"
-                    onTouchEnd={handleTapScreen}
+
                 >
-                     {images.map((image) =>
+                    {/* Khung time */}
+                    <ExpoImage
+                        source={{ uri: pageData?.khungTime }}
+                        style={styles.khungTime}
+                        contentFit="cover"
+                        cachePolicy="memory-disk"
+                    >
+                        <Text style={styles.time}>{formatTime(timeLeft)}</Text>
+                    </ExpoImage>
+                    {/* Khoan */}
+                    <ExpoImage
+                        source={{ uri: pageData?.imgKhoan }}
+                        style={[styles.imgKhoan, gameStyle]}
+                        contentFit="cover"
+                        cachePolicy="memory-disk"
+                        onTouchEnd={handleTapScreen}
+                    >
+                        {images.map((image) =>
                             visibleImageId === image.id ? (
                                 <ExpoImage
                                     key={image.id}
@@ -264,24 +309,6 @@ const Page_ThuTaiBanVit: React.FC = () => {
                                 />
                             ) : null
                         )}
-                    {/* Khung time */}
-                    <ExpoImage
-                        source={{ uri: pageData?.khungTime }}
-                        style={styles.khungTime}
-                        contentFit="cover"
-                        cachePolicy="memory-disk"
-                    >
-                        <Text style={styles.time}>{`00:${timeLeft < 10 ? "0" : ""}${timeLeft}`}</Text>
-                    </ExpoImage>
-                    {/* Khoan */}
-                    <ExpoImage
-                        source={{ uri: pageData?.imgKhoan }}
-                        style={styles.imgKhoan}
-                        contentFit="cover"
-                        cachePolicy="memory-disk"
-
-                    >
-                       
                     </ExpoImage>
                 </ExpoImage>
             </SafeAreaView>

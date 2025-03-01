@@ -111,9 +111,7 @@ const Page_BanVit: React.FC = () => {
 
             Alert.alert("Đã tìm thấy đối thủ!", "Trận đấu sẽ bắt đầu sau 5 giây...");
             setTimeout(() => {
-
                 navigation.navigate("ThuTaiBanVit", { opponentName: player1.uid === user?.uid ? player2.username : player1.username, gameMode });
-
             }, 5000);
 
         } catch (error) {

@@ -33,12 +33,12 @@ const Page_LacLocVang: React.FC = () => {
 
   // theo dõi thay đổi của shake
   useEffect(() => {
-    if (!user || totalShakes < 0 || !isTotalShakesLoaded) return;
+    if ( user?.uid || totalShakes < 0 || !isTotalShakesLoaded) return;
     const userRef = doc(db, "users", user.uid);
     updateDoc(userRef, { totalShakes })
       .then(() => console.log("totalShakes updated successfully"))
       .catch((error) => console.error("Error updating totalShakes:", error));
-  }, [totalShakes, user, isTotalShakesLoaded]);
+  }, [totalShakes,  user?.uid, isTotalShakesLoaded]);
   // load dữ liệu từ firebase
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -69,7 +69,7 @@ const Page_LacLocVang: React.FC = () => {
         handleShakeDetected(
           totalShakes,
           setTotalShakes,
-          setIsShaken,
+          setIsShaken,  
           setIsListening,
           setPopupVisible,
           setPopupMultiVisible,
@@ -87,7 +87,7 @@ const Page_LacLocVang: React.FC = () => {
 
   // đọc số lượt lắc của user
   useEffect(() => {
-    if (!user) return;
+    if (!user?.uid) return;
     const userRef = doc(db, "users", user.uid);
     const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
@@ -97,7 +97,7 @@ const Page_LacLocVang: React.FC = () => {
       }
     });
     return () => unsubscribe();
-  }, [user]);
+  }, [user?.uid]);
   return (
     <ExpoImage source={{ uri: page_LacLocVang?.imgBackGround }} style={styles.imgBackGround}  contentFit="cover"
     cachePolicy="memory-disk">
