@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { FlatList, Text, View, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import { Image, ImageBackground as ExpoImage } from "expo-image";
-import  styles  from './styles/KhoLocStyle'
-import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
+import styles from './styles/KhoLocStyle'
+import { collection, doc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
 import { app } from "../../firebase/firebaseConfig";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -115,10 +115,43 @@ const Page_KhoLoc: React.FC = () => {
         if (selectedTab === 'Mã số may mắn') return !!gift.giftcode;
         return true;
     });
+    // thực hiện nhận quà
+    const handleGiftPress = async (gift: Gift) => {
+        if (gift.status === "Chưa nhận") {
+            Alert.alert(
+                "Xác nhận nhận quà",
+                `Nhận "${gift.name}" vào túi ngay?`,
+                [
+                    {
+                        text: "Hủy",
+                        style: "cancel",
+                    },
+                    {
+                        text: "OK",
+                        onPress: async () => {
+                            try {
+                                const userRef = doc(db, "users", user?.uid);
+                                await updateDoc(userRef, {
+                                    khoLoc: userGifts.map((g) =>
+                                        g.id_qua === gift.id_qua && g.status === "Chưa nhận"
+                                            ? { ...g, status: "Đã nhận" }
+                                            : g
+                                    ),
+                                });
+                                console.log(`Cập nhật phần quà ${gift.name} thành "Đã nhận"`);
+                            } catch (error) {
+                                console.error("Lỗi khi cập nhật quà:", error);
+                            }
+                        },
+                    },
+                ]
+            );
+        }
+    };
     return (
         <ExpoImage
             source={{ uri: page_KhoLoc?.imgBackGround }}
-         contentFit="cover"
+            contentFit="cover"
             cachePolicy="memory-disk"
             style={styles.imgBackGround}
         >
@@ -164,56 +197,48 @@ const Page_KhoLoc: React.FC = () => {
                         columnWrapperStyle={{ gap: 10 }}
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item }) => (
-                            selectedTab === 'Mã số may mắn' ? (
-                                <View style={styles.giftContainer}>
-                                    <ImageBackground
-                                        source={require('../../assets/images/quabg.png')}
-                                        style={styles.imgGiftContainer}
-                                    >
-                                        <ImageBackground source={require('../../assets/images/ticker.png')} style={styles.imgGiftCode}>
-                                            <Text style={styles.giftcode}>{item.giftcode}</Text>
-                                        </ImageBackground>
-                                        <Text style={styles.count}>
-                                            Trạng thái:
-                                        </Text>
-                                        <Text style={[styles.count, item.status === 'Đã nhận' ? styles.txtDaNhan : styles.txtChuaNhan]}>
-                                            {item.status}
-                                        </Text>
-                                    </ImageBackground>
-                                </View>
-                            ) : (
-                                <View style={styles.giftContainer}>
-                                    <ImageBackground
-                                        source={require('../../assets/images/quabg.png')}
-                                        style={styles.quabg}
-                                    >
-                                        <Image source={{ uri: item.imgQua }} style={styles.giftImage} />
-                                        <View style={styles.giftInfo}>
-                                            <Text style={styles.giftName}>{item.name}</Text>
-                                        </View>
-                                        {/* Số lượng */}
-                                        <View style={styles.countContainer} >
-                                            <Text style={styles.count}>
-                                                Số lượng: {item.quantity}
-                                            </Text>
-                                        </View>
-                                        {/* Trạng thái */}
-                                        <View style={styles.countContainer} >
-                                            <Text style={styles.count}>
-                                                Trạng thái:
-                                            </Text>
+                            <TouchableOpacity onPress={() => handleGiftPress(item)}>
+                                {selectedTab === 'Mã số may mắn' ? (
+                                    <View style={styles.giftContainer}>
+                                        <ImageBackground
+                                            source={require('../../assets/images/quabg.png')}
+                                            style={styles.imgGiftContainer}
+                                        >
+                                            <ImageBackground source={require('../../assets/images/ticker.png')} style={styles.imgGiftCode}>
+                                                <Text style={styles.giftcode}>{item.giftcode}</Text>
+                                            </ImageBackground>
+                                            <Text style={styles.count}>Trạng thái:</Text>
                                             <Text style={[styles.count, item.status === 'Đã nhận' ? styles.txtDaNhan : styles.txtChuaNhan]}>
                                                 {item.status}
                                             </Text>
-                                        </View>
-                                    </ImageBackground>
-                                </View>
-                                
-                            )
-                            
+                                        </ImageBackground>
+                                    </View>
+                                ) : (
+                                    <View style={styles.giftContainer}>
+                                        <ImageBackground
+                                            source={require('../../assets/images/quabg.png')}
+                                            style={styles.quabg}
+                                        >
+                                            <Image source={{ uri: item.imgQua }} style={styles.giftImage} />
+                                            <View style={styles.giftInfo}>
+                                                <Text style={styles.giftName}>{item.name}</Text>
+                                            </View>
+                                            <View style={styles.countContainer}>
+                                                <Text style={styles.count}>Số lượng: {item.quantity}</Text>
+                                            </View>
+                                            <View style={styles.countContainer}>
+                                                <Text style={styles.count}>Trạng thái:</Text>
+                                                <Text style={[styles.count, item.status === 'Đã nhận' ? styles.txtDaNhan : styles.txtChuaNhan]}>
+                                                    {item.status}
+                                                </Text>
+                                            </View>
+                                        </ImageBackground>
+                                    </View>
+                                )}
+                            </TouchableOpacity>
                         )}
-                        
                     />
+
                     {/* Tổng quà chưa nhận thưởng */}
                     {selectedTab === 'Lắc lộc vàng' && (
                         <Text style={styles.countGiftChuaNhan}>

@@ -7,5 +7,5 @@ export type RootStackParamList = {
   BanVit: {gameMode : 'ThuTaiBanVit | AnhKim  | AnhHung'} ; 
   ThuTaiBanVit: { opponentName: string; gameMode: string };
   AnhKim: { opponentName: string; gameMode: string };
-  
+  BangXepHang: undefined
 };

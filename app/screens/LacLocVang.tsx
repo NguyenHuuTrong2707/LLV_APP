@@ -33,7 +33,7 @@ const Page_LacLocVang: React.FC = () => {
 
   // theo dõi thay đổi của shake
   useEffect(() => {
-    if ( user?.uid || totalShakes < 0 || !isTotalShakesLoaded) return;
+    if ( !user?.uid || totalShakes < 0 || !isTotalShakesLoaded) return;
     const userRef = doc(db, "users", user.uid);
     updateDoc(userRef, { totalShakes })
       .then(() => console.log("totalShakes updated successfully"))

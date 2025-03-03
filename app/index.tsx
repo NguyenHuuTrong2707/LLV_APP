@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import  Page_HuongDan  from './screens/HuongDan'
+import Page_BangXepHang from "./screens/BangXepHang";
 import  LoginScreen from './Login'
 import { useFonts } from 'expo-font';
 import { ActivityIndicator} from "react-native";

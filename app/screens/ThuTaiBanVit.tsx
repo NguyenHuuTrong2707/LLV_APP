@@ -37,7 +37,7 @@ const Page_ThuTaiBanVit: React.FC = () => {
     const [userName, setUserName] = useState<string>("Anonymous");
     const [userScore, setUserScore] = useState<number>(0);
     const [opponentScore, setOpponentScore] = useState<number>(0);
-    const [timeLeft, setTimeLeft] = useState(5);
+    const [timeLeft, setTimeLeft] = useState(15);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const [gameStyle, setGameStyle] = useState({});
     //hiển thị hình ảnh khi nhấn vào máy khoan
@@ -117,13 +117,13 @@ const Page_ThuTaiBanVit: React.FC = () => {
                                     totalLixi: increment(1) 
                                 });
                             }
-                            navigation.goBack()
+                            navigation.navigate('BangXepHang')
                         }}
                 ]);
             } else if (userScore < opponentScore) {
                 winnerMessage = `Bạn đã thua\nLần sau cố gắng hơn nhé`;
                 Alert.alert("Kết thúc!", winnerMessage, [
-                    { text: "OK", onPress: () => navigation.goBack() }
+                    { text: "OK", onPress: () =>  navigation.navigate('BangXepHang') }
                 ]);
             }
 
